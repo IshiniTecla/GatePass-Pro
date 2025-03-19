@@ -1,0 +1,59 @@
+/* Main Container */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Side Navigation */
+.side-nav {
+    width: 250px;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #f8f9fa;
+}
+
+/* Notification Bar */
+.notification-bar {
+    background-color: #e9ecef;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* Tab Navigation */
+.tab-navigation {
+    padding-top: 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Check-In/Check-Out Buttons */
+.checkin-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .side-nav {
+        width: 100%;
+    }
+
+    .tab-navigation {
+        display: flex;
+        justify-content: center;
+    }
+
+    .checkin-buttons {
+        flex-direction: column;
+    }
+}
