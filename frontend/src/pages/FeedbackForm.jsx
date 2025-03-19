@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { submitFeedback } from "../services/feedbackService";
 import { useNavigate } from "react-router-dom";
-import "../styles/FeedbackForm.css";
-
+import "../styles/FeedbackForm.css"; // ✅ Ensured correct import
 
 const FeedbackForm = () => {
     const navigate = useNavigate();
@@ -19,14 +18,19 @@ const FeedbackForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await submitFeedback(formData);
-        alert("Feedback submitted successfully!");
-        navigate("/feedback-list");
+        try {
+            await submitFeedback(formData);
+            alert("Feedback submitted successfully!");
+            navigate("/feedback-list");
+        } catch (error) {
+            console.error("Error submitting feedback:", error);
+            alert("Failed to submit feedback.");
+        }
     };
 
     return (
-        <div className="container mt-5">
-            <div className="card shadow p-4">
+        <div className="feedback-form-container">
+            <div className="feedback-card">
                 <h2 className="text-center mb-4">Submit Your Feedback</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">

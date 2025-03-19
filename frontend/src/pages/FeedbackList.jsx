@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getFeedbackList, deleteFeedback } from "../services/feedbackService";
 import { Link } from "react-router-dom";
-import { Table, Button, Container } from "react-bootstrap";
-import "../styles.css";
-
+import { Table, Button, Container } from "react-bootstrap"; // ✅ Added missing imports
+import "../styles/FeedbackList.css"; // ✅ Ensured correct import
 
 const FeedbackList = () => {
     const [feedbacks, setFeedbacks] = useState([]);
@@ -16,7 +15,7 @@ const FeedbackList = () => {
     const fetchFeedbacks = async () => {
         try {
             const data = await getFeedbackList();
-            setFeedbacks(data);
+            setFeedbacks(data || []); // ✅ Ensure data is an array
         } catch (error) {
             console.error("Error fetching feedbacks:", error);
         }
@@ -35,8 +34,8 @@ const FeedbackList = () => {
     };
 
     return (
-        <Container>
-            <h2 className="mt-4 mb-3">Visitor Feedback</h2>
+        <Container className="feedback-list-container">
+            <h2 className="text-center mt-4 mb-3">Visitor Feedback</h2>
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
@@ -75,9 +74,7 @@ const FeedbackList = () => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="6" className="text-center">
-                                No feedback found.
-                            </td>
+                            <td colSpan="6" className="text-center">No feedback found.</td>
                         </tr>
                     )}
                 </tbody>
