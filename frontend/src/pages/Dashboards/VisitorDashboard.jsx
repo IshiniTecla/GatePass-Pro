@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Button, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../styles/VisitorDashboard.css";
+
 
 const VisitorDashboard = () => {
     const navigate = useNavigate();

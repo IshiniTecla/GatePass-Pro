@@ -11,8 +11,8 @@ const App = () => {
     <Router>
       <Routes>
 
-        <Route path="/feedbackform" element={<FeedbackForm />} />
-        <Route path="/feedbacklist" element={<FeedbackList />} />
+        <Route path="/feedback-form" element={<FeedbackForm />} />
+        <Route path="/feedback-list" element={<FeedbackList />} />
         <Route path="/visitordashboard" element={<VisitorDashboard />} />
       </Routes>
     </Router>
