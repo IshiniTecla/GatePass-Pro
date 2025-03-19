@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 import FeedbackForm from "./pages/FeedbackForm";
 import FeedbackList from "./pages/FeedbackList";
 import VisitorDashboard from "./pages/Dashboards/VisitorDashboard"
-import "bootstrap/dist/css/bootstrap.min.css";
+import FaceRecognition from "./pages/FaceRecognition";
+import ManualCheckIn from "./pages/ManualCheckin";
+
 
 
 const App = () => {
@@ -13,7 +16,9 @@ const App = () => {
 
         <Route path="/feedback-form" element={<FeedbackForm />} />
         <Route path="/feedback-list" element={<FeedbackList />} />
-        <Route path="/visitordashboard" element={<VisitorDashboard />} />
+        <Route path="/visitor-dashboard" element={<VisitorDashboard />} />
+        <Route path="/face-recognition" element={<FaceRecognition />} />
+        <Route path="/manual-checkin" element={<ManualCheckIn />} />
       </Routes>
     </Router>
   );

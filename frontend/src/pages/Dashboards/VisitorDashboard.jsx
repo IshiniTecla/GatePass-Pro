@@ -27,13 +27,13 @@ const VisitorDashboard = () => {
                         className="me-2"
                         onClick={() => navigate("/face-recognition")}
                     >
-                        Face Recognition
+                        Check-In/Out Using Biometrics
                     </Button>
                     <Button
                         variant="secondary"
-                        onClick={() => navigate("/manual-checkin-checkout")}
+                        onClick={() => navigate("/manual-checkin")}
                     >
-                        Manual Check-In/Check-Out
+                        Check-In/Out Manually
                     </Button>
                 </div>
 
