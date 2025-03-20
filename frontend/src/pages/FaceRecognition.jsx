@@ -67,32 +67,25 @@ const FaceRecognition = () => {
     }, []);
 
     const handleCheckInOut = async () => {
-        if (!isFaceDetected) {
-            alert("No face detected. Please try again.");
-            return;
-        }
+        if (!videoRef.current) return;
 
-        const imageData = canvasRef.current.toDataURL("image/jpeg");
-        const checkInDetails = {
-            checkInTime: new Date(),
-            photo: imageData,
-        };
+        const checkInTime = new Date().toISOString(); // ISO format for consistency
+        const canvas = canvasRef.current;
+        const photo = canvas.toDataURL("image/jpeg");
+
+        const checkInData = { checkInTime, photo };
 
         try {
-            const response = await fetch("http://localhost:5000/visitor-checkin", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(checkInDetails),
-            });
+            const response = await axios.post("http://localhost:5000/visitor-checkin", checkInData);
 
-            if (response.ok) {
+            if (response.status === 201) {
                 alert("Check-In successful!");
             } else {
-                throw new Error("Check-In failed.");
+                throw new Error("Unexpected response status: " + response.status);
             }
         } catch (error) {
             console.error("Check-In Error:", error);
-            alert("Error during Check-In. Please try again.");
+            alert("Check-In failed. " + (error.response?.data?.message || error.message));
         }
     };
 
