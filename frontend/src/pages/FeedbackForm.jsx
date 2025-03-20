@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { submitFeedback } from "../services/feedbackService";
 import { useNavigate } from "react-router-dom";
-import "./FeedbackForm.css"
+import { useSnackbar } from 'notistack';
+import "./FeedbackForm.css";
 
 const FeedbackForm = () => {
+    const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         visitorName: "",
@@ -11,6 +13,7 @@ const FeedbackForm = () => {
         rating: 1,
         comments: "",
     });
+    const [loading, setLoading] = useState(false); // Loading state
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,13 +21,27 @@ const FeedbackForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true); // Set loading to true when submitting
         try {
             await submitFeedback(formData);
-            alert("Feedback submitted successfully!");
-            navigate("/feedback-list");
+
+            enqueueSnackbar("Feedback submitted successfully!", {
+                variant: 'success',
+                autoHideDuration: 2000, // Snackbar disappears after 2 seconds
+            });
+
+            setLoading(false);
+
+            navigate("/feedback-list", { state: { submitted: true } }); // Redirect to FeedbackList
         } catch (error) {
             console.error("Error submitting feedback:", error);
-            alert("Failed to submit feedback.");
+
+            enqueueSnackbar("Failed to submit feedback. Please try again.", {
+                variant: 'error',
+                autoHideDuration: 2000,
+            });
+
+            setLoading(false); // Reset loading state on error
         }
     };
 
@@ -81,8 +98,8 @@ const FeedbackForm = () => {
                             required
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary w-100">
-                        Submit Feedback
+                    <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                        {loading ? "Submitting..." : "Submit Feedback"}
                     </button>
                 </form>
             </div>

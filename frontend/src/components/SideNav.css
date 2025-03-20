@@ -18,19 +18,23 @@
 .sidebar.closed {
     width: 80px;
 }
-
 /* Toggle Button */
 .toggle-btn {
-    background: transparent;
-    border: none;
+    position: absolute;
+    width: 20px;
+    top: 5px; /* Keep it near the top */
+    left: 5px; /* Align to the left */
+    background: #0d6efd;
     color: white;
-    font-size: 24px;
+    border: none;
     cursor: pointer;
+    padding: 5px 8px;
+    font-size: 20px;
+    border-radius:  5px;
+    transition: 0.3s;
 }
 
-.toggle-btn:hover {
-    color: #f8f9fa;
-}
+
 
 /* Logo Section */
 .logo {
@@ -39,6 +43,7 @@
     font-weight: bold;
     text-transform: uppercase;
     padding: 10px 0;
+    margin-top: 50px; /* Adjust margin to ensure visibility */
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 

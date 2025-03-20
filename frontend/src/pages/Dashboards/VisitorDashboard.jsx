@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Button, Nav, Navbar } from "react-bootstrap";
+import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./VisitorDashboard.css";
 import Sidebar from "../../components/SideNav";
@@ -15,13 +16,14 @@ const VisitorDashboard = () => {
             {/* Main Content Area */}
             <div className="dashboard-content">
 
-                {/* Notification Bar */}
-                <Navbar bg="info" variant="dark" className="notification-bar">
-                    <Container>
-                        <Navbar.Brand>Notifications</Navbar.Brand>
-                        <span className="notification-text">No new notifications.</span>
-                    </Container>
-                </Navbar>
+                {/* Notifications Section */}
+                <div className="notification-bar">
+                    <h2>Notifications</h2>
+                    <ul>
+                        <li>No new notifications.</li>
+
+                    </ul>
+                </div>
                 {/* Dashboard Content */}
                 <Container className="dashboard-container mt-5">
                     <h2 className="text-center mb-4">Visitor Dashboard</h2>

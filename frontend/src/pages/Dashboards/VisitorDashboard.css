@@ -32,21 +32,35 @@ body {
     background-color: #f8f9fa;
 }
 
-/* Notification Bar - Positioned at the top of the content, not over the sidebar */
+/* Notification Bar */
 .notification-bar {
-    background-color: #17a2b8 !important;
-    color: white;
-    padding: 10px 20px;
-    font-size: 16px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    width: 100%;
-    position: relative; /* Ensures it stays within the content area */
+    max-width: 900px;
+    background-color: #ecf0f1;
+    padding: 20px;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Notification Text */
-.notification-text {
-    font-weight: bold;
+.notification-bar h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+ 
+}
+
+.notification-bar ul {
+    list-style: none;
+    padding: 0 ;
+}
+
+.notification-bar ul li {
+    background-color: #bdc3c7;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    color: #2c3e50;
+    font-size: 1rem;
 }
 
 /* Dashboard Container */
@@ -83,6 +97,11 @@ button {
     .dashboard-layout {
         flex-direction: column;
     }
+  
+    .notification-bar {
+        width: 100%; /* Full width on small screens */
+        margin-left: 0; /* No left margin */
+    }
 
     .sidebar {
         width: 100%;
@@ -94,12 +113,6 @@ button {
         margin-left: 0;
         width: 100%;
         padding: 10px;
-    }
-
-    .notification-bar {
-        position: relative;
-        width: 100%;
-    }
 
     .dashboard-container {
         padding: 15px;

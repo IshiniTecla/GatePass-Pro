@@ -24,12 +24,12 @@ const Sidebar = () => {
 
             {/* Navigation Links */}
             <nav className="nav-links">
-                <Link to="/dashboard" className="nav-item">
+                <Link to="/visitor-dashboard" className="nav-item">
                     <FaUser className="icon" />
                     <span className="nav-text">Dashboard</span>
                 </Link>
 
-                <Link to="/feedback" className="nav-item">
+                <Link to="/feedback-form" className="nav-item">
                     <FaClipboardList className="icon" />
                     <span className="nav-text">Feedback</span>
                 </Link>
@@ -37,7 +37,7 @@ const Sidebar = () => {
 
             {/* Logout Button */}
             <div className="logout">
-                <Link to="/logout" className="nav-item logout-btn">
+                <Link to="/" className="nav-item logout-btn">
                     <FaSignOutAlt className="icon" />
                     <span className="nav-text">Logout</span>
                 </Link>
