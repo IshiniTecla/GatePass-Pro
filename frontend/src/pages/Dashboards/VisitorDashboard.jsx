@@ -1,6 +1,5 @@
 import React from "react";
 import { Container, Button, Nav, Navbar } from "react-bootstrap";
-import { FaBell } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "./VisitorDashboard.css";
 import Sidebar from "../../components/SideNav";
