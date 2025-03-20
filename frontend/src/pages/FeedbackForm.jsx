@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { submitFeedback } from "../services/feedbackService";
 import { useNavigate } from "react-router-dom";
+import "./FeedbackForm.css"
 
 const FeedbackForm = () => {
     const navigate = useNavigate();

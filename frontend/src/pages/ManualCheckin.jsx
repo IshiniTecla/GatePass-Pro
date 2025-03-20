@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Form, Button, Container } from "react-bootstrap";
+import "./ManualCheckIn.css"
 
 const ManualCheckIn = () => {
     const [visitorName, setVisitorName] = useState("");
@@ -36,7 +37,7 @@ const ManualCheckIn = () => {
 
     return (
         <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
-            <h2>Manual Visitor Check-In</h2>
+            <h2>Check-In/Out by filling this form</h2>
             {message && <p>{message}</p>}
             <Form onSubmit={handleCheckIn}>
                 <Form.Group controlId="visitorName">

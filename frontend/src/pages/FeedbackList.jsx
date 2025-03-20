@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getFeedbackList, deleteFeedback } from "../services/feedbackService";
 import { Link } from "react-router-dom";
 import { Table, Button, Container } from "react-bootstrap"; // ✅ Added missing imports
-
+import "./FeedbackList.css"
 
 const FeedbackList = () => {
     const [feedbacks, setFeedbacks] = useState([]);
