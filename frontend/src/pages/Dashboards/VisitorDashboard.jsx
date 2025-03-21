@@ -69,13 +69,13 @@ const VisitorDashboard = () => {
                         <Button
                             variant="primary"
                             className="me-2"
-                            onClick={() => navigate("/schedule-appointment")}
+                            onClick={() => navigate("/appointment-form")}
                         >
                             Schedule Appointment
                         </Button>
                         <Button
                             variant="secondary"
-                            onClick={() => navigate("/view-appointments")}
+                            onClick={() => navigate("/appointment-list")}
                         >
                             View Appointments Scheduled
                         </Button>

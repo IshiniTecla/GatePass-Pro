@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
-
+import appointmentRoutes from "./routes/appointmentRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -24,6 +24,7 @@ app.listen(PORT, () => {
 
 // Routes
 app.use("/feedback", feedbackRoutes);
+app.use("/api/appointments", appointmentRoutes);
 
 // Connect to MongoDB
 mongoose
