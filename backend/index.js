@@ -4,33 +4,38 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
-import visitorRoutes from "./route/visitorRoutes";
+import visitorRoutes from "./routes/visitorRoutes.js";
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// Middleware setup
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  })
+);
 app.use(express.json());
 
-const PORT = process.env.PORT || 5000;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
-const MONGO_URL = process.env.MONGO_URL;
-
+// Test route
 app.get("/", (req, res) => {
   res.send("Backend is running...");
-});
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 });
 
 // Routes
 app.use("/feedback", feedbackRoutes);
 app.use("/api/appointments", appointmentRoutes);
-app.use("/api", visitorRoutes);
+app.use("/api/visitor", visitorRoutes); // Ensure route prefix matches frontend
 
-// Connect to MongoDB
+// MongoDB connection
 mongoose
-  .connect(MONGO_URL, {})
-  .then(() => console.log("MongoDB connected"))
+  .connect(process.env.MONGO_URL)
+  .then(() => console.log("MongoDB connected."))
   .catch((error) => console.error("MongoDB connection failed:", error));
+
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

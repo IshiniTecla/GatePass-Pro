@@ -2,8 +2,15 @@ import express from "express";
 import Visitor from "../models/Visitor.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import dotenv from "dotenv";
+
+dotenv.config(); // Load environment variables
 
 const router = express.Router();
+
+// Debug: Check if environment variables are loaded correctly
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "******" : "MISSING");
 
 // Email transporter setup
 const transporter = nodemailer.createTransport({
@@ -19,55 +26,54 @@ const generateOTP = () => {
   return crypto.randomInt(100000, 999999).toString();
 };
 
-// Manual Check-In (POST) with OTP
-router.post("/checkin", async (req, res) => {
+// **Send OTP Route** (POST)
+router.post("/send-otp", async (req, res) => {
   try {
-    const { visitorName, email, contactNumber, checkInTime } = req.body;
+    const { email } = req.body;
 
-    if (!visitorName || !email || !contactNumber || !checkInTime) {
-      return res.status(400).json({
-        message: "All fields are required for manual check-in.",
-      });
+    if (!email) {
+      return res.status(400).json({ message: "Email is required." });
     }
 
     const otp = generateOTP();
 
     const visitor = new Visitor({
-      visitorName,
       email,
-      contactNumber,
-      checkInTime,
-      photo: "Manual check-in - no photo",
       otp,
       isVerified: false,
+      checkInTime: new Date(), // Dummy value for validation
+      photo: "N/A", // Dummy value for validation
     });
 
     await visitor.save();
 
-    // Send OTP via email
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Your OTP for GatePass Pro Check-In",
+      subject: "OTP Verification for GatePass Pro Check-In",
       text: `Your OTP for check-in is: ${otp}`,
     };
 
     await transporter.sendMail(mailOptions);
 
-    res.status(201).json({
-      message: "OTP sent to email. Please verify to complete check-in.",
-      visitor,
+    res.status(200).json({
+      message: "OTP sent to email.",
+      visitorId: visitor._id,
     });
   } catch (error) {
-    console.error("Manual check-in error:", error);
-    res.status(500).json({ message: "Failed to check in", error });
+    console.error("Send OTP Error:", error);
+    res.status(500).json({ message: "Failed to send OTP.", error });
   }
 });
 
-// OTP Verification (POST)
+// **Verify OTP & Check-In Route** (POST)
 router.post("/verify-otp", async (req, res) => {
   try {
-    const { email, otp } = req.body;
+    const { visitorName, email, contactNumber, checkInTime, otp } = req.body;
+
+    if (!visitorName || !email || !contactNumber || !checkInTime || !otp) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
 
     const visitor = await Visitor.findOne({ email });
 
@@ -79,21 +85,30 @@ router.post("/verify-otp", async (req, res) => {
       return res.status(400).json({ message: "Invalid OTP." });
     }
 
-    visitor.otp = null; // Clear OTP after verification
+    // Update visitor and clear OTP
+    visitor.visitorName = visitorName;
+    visitor.contactNumber = contactNumber;
+    visitor.checkInTime = new Date(checkInTime);
+    visitor.otp = null;
+
     await visitor.save();
 
-    res.status(200).json({ message: "OTP verified. Awaiting admin approval." });
+    res.status(200).json({
+      message: "OTP verified. Check-in successful. Awaiting admin approval.",
+      visitorId: visitor._id,
+    });
   } catch (error) {
-    res.status(500).json({ message: "OTP verification failed", error });
+    console.error("Verify OTP Error:", error);
+    res.status(500).json({ message: "OTP verification failed.", error });
   }
 });
 
-// Admin Verification (PATCH)
+// **Admin Verification Route** (PATCH)
 router.patch("/admin-verify/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const visitor = await Visitor.findById(id);
 
+    const visitor = await Visitor.findById(id);
     if (!visitor) {
       return res.status(404).json({ message: "Visitor not found." });
     }
@@ -101,39 +116,13 @@ router.patch("/admin-verify/:id", async (req, res) => {
     visitor.isVerified = true;
     await visitor.save();
 
-    res.status(200).json({ message: "Visitor verified by admin.", visitor });
-  } catch (error) {
-    res.status(500).json({ message: "Admin verification failed.", error });
-  }
-});
-
-// Facial Check-In (POST)
-router.post("/visitor-checkin", async (req, res) => {
-  try {
-    const { checkInTime, photo } = req.body;
-
-    if (!photo || !checkInTime) {
-      return res.status(400).json({
-        message: "Missing check-in time or photo.",
-      });
-    }
-
-    const visitor = new Visitor({
-      checkInTime,
-      photo,
-    });
-
-    await visitor.save();
-
-    res.status(201).json({
-      message: "Facial Check-In successful!",
+    res.status(200).json({
+      message: "Visitor successfully verified by admin.",
       visitor,
     });
   } catch (error) {
-    res.status(500).json({
-      message: "Error saving check-in data.",
-      error,
-    });
+    console.error("Admin Verification Error:", error);
+    res.status(500).json({ message: "Admin verification failed.", error });
   }
 });
 

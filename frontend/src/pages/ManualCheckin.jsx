@@ -12,34 +12,41 @@ const ManualCheckIn = () => {
     const [otpSent, setOtpSent] = useState(false);
     const [message, setMessage] = useState("");
 
-    const sendOtp = async () => {
+    // **Send OTP to the visitor's email**
+    const sendOtp = async (e) => {
+        e.preventDefault();
+
         try {
-            const response = await axios.post("http://localhost:5000/api/send-otp", { email });
-            alert("OTP sent to your email!");
-            return response.data.otp; // For testing, remove this in production.
+            const response = await axios.post("http://localhost:5000/api/visitor/send-otp", {
+                email,
+            });
+
+            console.log("OTP Sent:", response.data);
+            setMessage("OTP sent to your email.");
+            setOtpSent(true); // Enable OTP input field
         } catch (error) {
             console.error("Error sending OTP:", error);
-            alert("Failed to send OTP. Please try again.");
+            setMessage("Failed to send OTP. Please try again.");
         }
     };
 
-
-    const handleCheckIn = async (e) => {
+    // **Verify OTP & Check-In**
+    const verifyOtpAndCheckIn = async (e) => {
         e.preventDefault();
 
-        const checkInData = {
-            visitorName,
-            email,
-            contactNumber,
-            checkInTime: new Date(checkInTime).toISOString(),
-            otp,
-            photo: null // No photo for manual check-in
-        };
-
         try {
-            await axios.post("http://localhost:5000/visitor/checkin", checkInData);
+            const response = await axios.post("http://localhost:5000/api/visitor/verify-otp", {
+                visitorName,
+                email,
+                contactNumber,
+                checkInTime: new Date(checkInTime).toISOString(),
+                otp,
+            });
+
+            console.log("Check-In Successful:", response.data);
             setMessage("Check-in successful! Waiting for admin verification.");
-            // Clear form
+
+            // Reset form after successful check-in
             setVisitorName("");
             setEmail("");
             setContactNumber("");
@@ -56,7 +63,8 @@ const ManualCheckIn = () => {
         <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
             <h2>Manual Check-In</h2>
             {message && <p className="message">{message}</p>}
-            <Form onSubmit={handleCheckIn}>
+
+            <Form onSubmit={otpSent ? verifyOtpAndCheckIn : sendOtp}>
                 <Form.Group controlId="visitorName">
                     <Form.Label>Name</Form.Label>
                     <Form.Control
@@ -97,12 +105,7 @@ const ManualCheckIn = () => {
                     />
                 </Form.Group>
 
-                {!otpSent && (
-                    <Button onClick={sendOtp} variant="secondary" style={{ marginBottom: "20px" }}>
-                        Send OTP
-                    </Button>
-                )}
-
+                {/* OTP Section */}
                 {otpSent && (
                     <>
                         <Form.Group controlId="otp">
@@ -118,6 +121,12 @@ const ManualCheckIn = () => {
                             Verify & Check In
                         </Button>
                     </>
+                )}
+
+                {!otpSent && (
+                    <Button variant="secondary" type="submit" style={{ marginTop: "20px" }}>
+                        Send OTP
+                    </Button>
                 )}
             </Form>
         </Container>
