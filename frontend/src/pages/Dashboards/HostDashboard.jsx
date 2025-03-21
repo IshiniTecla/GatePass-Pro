@@ -33,7 +33,7 @@ const HostDashboard = () => {
                         <Button
                             variant="primary"
                             className="me-2"
-                            onClick={() => navigate("/")}
+                            onClick={() => navigate("/view-appointment")}
                         >
                             View Appoinments
                         </Button>

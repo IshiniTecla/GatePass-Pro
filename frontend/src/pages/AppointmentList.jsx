@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../App.css";
 import "./AppointmentList.css"
 
 function AppointmentList({ isHost }) {

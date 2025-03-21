@@ -32,7 +32,7 @@ function EditAppointment() {
         setError(null); // Reset any previous error messages
         try {
             await axios.put(`http://localhost:5000/api/appointments/${id}`, formData);
-            navigate('/'); // Redirect to dashboard after update
+            navigate('/appointment-list'); // Redirect to dashboard after update
         } catch (error) {
             console.error('Error updating appointment:', error);
             setError('Failed to update the appointment. Please try again.');
