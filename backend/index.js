@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
 import appointmentRoutes from "./routes/appointmentRoutes.js";
+import visitorRoutes from "./route/visitorRoutes";
+
 dotenv.config();
 
 const app = express();
@@ -25,6 +27,7 @@ app.listen(PORT, () => {
 // Routes
 app.use("/feedback", feedbackRoutes);
 app.use("/api/appointments", appointmentRoutes);
+app.use("/api", visitorRoutes);
 
 // Connect to MongoDB
 mongoose

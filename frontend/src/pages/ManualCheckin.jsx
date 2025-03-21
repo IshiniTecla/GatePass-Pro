@@ -1,14 +1,28 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Form, Button, Container } from "react-bootstrap";
-import "./ManualCheckIn.css"
+import "./ManualCheckIn.css";
 
 const ManualCheckIn = () => {
     const [visitorName, setVisitorName] = useState("");
     const [email, setEmail] = useState("");
     const [contactNumber, setContactNumber] = useState("");
     const [checkInTime, setCheckInTime] = useState("");
+    const [otp, setOtp] = useState("");
+    const [otpSent, setOtpSent] = useState(false);
     const [message, setMessage] = useState("");
+
+    const sendOtp = async () => {
+        try {
+            const response = await axios.post("http://localhost:5000/api/send-otp", { email });
+            alert("OTP sent to your email!");
+            return response.data.otp; // For testing, remove this in production.
+        } catch (error) {
+            console.error("Error sending OTP:", error);
+            alert("Failed to send OTP. Please try again.");
+        }
+    };
+
 
     const handleCheckIn = async (e) => {
         e.preventDefault();
@@ -18,27 +32,30 @@ const ManualCheckIn = () => {
             email,
             contactNumber,
             checkInTime: new Date(checkInTime).toISOString(),
+            otp,
             photo: null // No photo for manual check-in
         };
 
         try {
             await axios.post("http://localhost:5000/visitor/checkin", checkInData);
-            setMessage("Check-in successful!");
+            setMessage("Check-in successful! Waiting for admin verification.");
             // Clear form
             setVisitorName("");
             setEmail("");
             setContactNumber("");
             setCheckInTime("");
+            setOtp("");
+            setOtpSent(false);
         } catch (error) {
-            console.error("Error during manual check-in:", error);
-            setMessage("Failed to check in. Please try again.");
+            console.error("Check-in Error:", error);
+            setMessage("Check-in failed. Please check OTP or details.");
         }
     };
 
     return (
         <Container style={{ maxWidth: "500px", marginTop: "50px" }}>
-            <h2>Check-In/Out by filling this form</h2>
-            {message && <p>{message}</p>}
+            <h2>Manual Check-In</h2>
+            {message && <p className="message">{message}</p>}
             <Form onSubmit={handleCheckIn}>
                 <Form.Group controlId="visitorName">
                     <Form.Label>Name</Form.Label>
@@ -80,9 +97,28 @@ const ManualCheckIn = () => {
                     />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" style={{ marginTop: "20px" }}>
-                    Check In
-                </Button>
+                {!otpSent && (
+                    <Button onClick={sendOtp} variant="secondary" style={{ marginBottom: "20px" }}>
+                        Send OTP
+                    </Button>
+                )}
+
+                {otpSent && (
+                    <>
+                        <Form.Group controlId="otp">
+                            <Form.Label>Enter OTP</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={otp}
+                                onChange={(e) => setOtp(e.target.value)}
+                                required
+                            />
+                        </Form.Group>
+                        <Button variant="primary" type="submit">
+                            Verify & Check In
+                        </Button>
+                    </>
+                )}
             </Form>
         </Container>
     );
