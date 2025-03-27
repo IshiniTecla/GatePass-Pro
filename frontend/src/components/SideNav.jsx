@@ -13,9 +13,7 @@ const Sidebar = () => {
     return (
         <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
             {/* Toggle Button */}
-            <button className="toggle-btn" onClick={toggleSidebar}>
-                {isOpen ? <FaTimes /> : <FaBars />}
-            </button>
+
 
             {/* Logo */}
             <div className="logo">

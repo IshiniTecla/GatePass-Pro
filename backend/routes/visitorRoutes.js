@@ -22,11 +22,20 @@ const transporter = nodemailer.createTransport({
 });
 
 // Generate OTP function
-const generateOTP = () => {
-  return crypto.randomInt(100000, 999999).toString();
-};
+const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
-// **Send OTP Route** (POST)
+// **GET All Visitors**
+router.get("/all", async (req, res) => {
+  try {
+    const visitors = await Visitor.find();
+    res.status(200).json(visitors);
+  } catch (error) {
+    console.error("Fetch Visitors Error:", error);
+    res.status(500).json({ message: "Failed to fetch visitors", error });
+  }
+});
+
+// **Send OTP Route (POST)**
 router.post("/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
@@ -41,8 +50,8 @@ router.post("/send-otp", async (req, res) => {
       email,
       otp,
       isVerified: false,
-      checkInTime: new Date(), // Dummy value for validation
-      photo: "N/A", // Dummy value for validation
+      checkInTime: new Date(), // Dummy value
+      photo: "N/A", // Dummy value
     });
 
     await visitor.save();
@@ -54,11 +63,16 @@ router.post("/send-otp", async (req, res) => {
       text: `Your OTP for check-in is: ${otp}`,
     };
 
-    await transporter.sendMail(mailOptions);
-
-    res.status(200).json({
-      message: "OTP sent to email.",
-      visitorId: visitor._id,
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error("Nodemailer Error:", error);
+        return res.status(500).json({ message: "Failed to send OTP.", error });
+      }
+      console.log("Email Sent: ", info);
+      res.status(200).json({
+        message: "OTP sent to email.",
+        visitorId: visitor._id,
+      });
     });
   } catch (error) {
     console.error("Send OTP Error:", error);
@@ -66,7 +80,7 @@ router.post("/send-otp", async (req, res) => {
   }
 });
 
-// **Verify OTP & Check-In Route** (POST)
+// **Verify OTP & Check-In Route (POST)**
 router.post("/verify-otp", async (req, res) => {
   try {
     const { visitorName, email, contactNumber, checkInTime, otp } = req.body;
@@ -85,11 +99,12 @@ router.post("/verify-otp", async (req, res) => {
       return res.status(400).json({ message: "Invalid OTP." });
     }
 
-    // Update visitor and clear OTP
+    // Update visitor details
     visitor.visitorName = visitorName;
     visitor.contactNumber = contactNumber;
     visitor.checkInTime = new Date(checkInTime);
     visitor.otp = null;
+    visitor.isVerified = false; // Admin verification pending
 
     await visitor.save();
 
@@ -103,7 +118,7 @@ router.post("/verify-otp", async (req, res) => {
   }
 });
 
-// **Admin Verification Route** (PATCH)
+// **Admin Verification Route (PATCH)**
 router.patch("/admin-verify/:id", async (req, res) => {
   try {
     const { id } = req.params;

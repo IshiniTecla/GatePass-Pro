@@ -31,33 +31,26 @@ const ManualCheckIn = () => {
     };
 
     // **Verify OTP & Check-In**
-    const verifyOtpAndCheckIn = async (e) => {
-        e.preventDefault();
-
+    const verifyOtpAndCheckIn = async () => {
         try {
-            const response = await axios.post("http://localhost:5000/api/visitor/verify-otp", {
+            const requestData = {
                 visitorName,
                 email,
                 contactNumber,
-                checkInTime: new Date(checkInTime).toISOString(),
-                otp,
-            });
+                checkInTime,
+                otp: otp.toString(), // Convert OTP to string
+            };
 
-            console.log("Check-In Successful:", response.data);
-            setMessage("Check-in successful! Waiting for admin verification.");
+            console.log("Sending Data to Backend:", requestData);
 
-            // Reset form after successful check-in
-            setVisitorName("");
-            setEmail("");
-            setContactNumber("");
-            setCheckInTime("");
-            setOtp("");
-            setOtpSent(false);
+            const response = await axios.post("http://localhost:5000/api/visitor/verify-otp", requestData);
+
+            console.log("Check-in Success:", response.data);
         } catch (error) {
-            console.error("Check-in Error:", error);
-            setMessage("Check-in failed. Please check OTP or details.");
+            console.error("Check-in Error:", error.response?.data || error.message);
         }
     };
+
 
     return (
         <Container style={{ maxWidth: "500px", marginTop: "50px" }}>

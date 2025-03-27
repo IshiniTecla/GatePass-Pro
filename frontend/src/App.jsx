@@ -11,6 +11,7 @@ import AppointmentForm from "./pages/AppointmentForm"
 import AppointmentList from "./pages/AppointmentList"
 import EditAppointment from "./pages/EditAppointment";
 import HostDashboard from './pages/Dashboards/HostDashboard';
+import AdminDashboard from './pages/Dashboards/AdminDashboard';
 import ViewAppointment from './pages/ViewAppointment';
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/feedback-list" element={<FeedbackList />} />
         <Route path="/visitor-dashboard" element={<VisitorDashboard />} />
         <Route path="/host-dashboard" element={<HostDashboard />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/face-recognition" element={<FaceRecognition />} />
         <Route path="/manual-checkin" element={<ManualCheckIn />} />
         <Route path="/appointment-form" element={<AppointmentForm />} />

@@ -24,13 +24,11 @@
     width: 20px;
     top: 5px; /* Keep it near the top */
     left: 5px; /* Align to the left */
-    background: #0d6efd;
     color: white;
     border: none;
     cursor: pointer;
     padding: 5px 8px;
     font-size: 20px;
-    border-radius:  5px;
     transition: 0.3s;
 }
 

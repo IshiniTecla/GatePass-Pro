@@ -8,6 +8,7 @@ body {
 
 /* Layout for sidebar and content */
 .dashboard-layout {
+    
     display: flex;
     min-height: 100vh;
 }
@@ -26,7 +27,8 @@ body {
 
 /* Main Content Area */
 .dashboard-content {
-    margin-left: 250px; /* Push content to the right of the sidebar */
+    
+    margin-left: 200px; /* Push content to the right of the sidebar */
     width: calc(100% - 250px);
     padding: 20px;
     background-color: #f8f9fa;
@@ -46,12 +48,11 @@ body {
     font-size: 1.5rem;
     color: #2c3e50;
     margin-bottom: 10px;
- 
 }
 
 .notification-bar ul {
     list-style: none;
-    padding: 0 ;
+    padding: 0;
 }
 
 .notification-bar ul li {
@@ -92,12 +93,71 @@ button {
     margin-bottom: 10px;
 }
 
+/* Visitor Verification Table */
+.verification-table-container {
+    margin-top: 20px;
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.verification-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.verification-table th, 
+.verification-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.verification-table th {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.verification-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Action Buttons */
+.verify-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.reject-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.verify-btn:hover {
+    background-color: #218838;
+}
+
+.reject-btn:hover {
+    background-color: #c82333;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .dashboard-layout {
         flex-direction: column;
     }
-  
+
     .notification-bar {
         width: 100%; /* Full width on small screens */
         margin-left: 0; /* No left margin */
@@ -113,6 +173,7 @@ button {
         margin-left: 0;
         width: 100%;
         padding: 10px;
+    }
 
     .dashboard-container {
         padding: 15px;
@@ -120,6 +181,15 @@ button {
 
     .dashboard-tab {
         padding: 10px;
+    }
+
+    .verification-table-container {
+        padding: 10px;
+    }
+
+    .verification-table th, 
+    .verification-table td {
+        padding: 8px;
     }
 
     button {

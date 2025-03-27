@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Button, Nav, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "./VisitorDashboard.css";
 import Sidebar from "../../components/SideNav";
 
 const VisitorDashboard = () => {
