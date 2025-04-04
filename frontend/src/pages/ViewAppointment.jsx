@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import "./AppointmentList.css"
+import "./AppointmentList.css";
 
 function ViewAppointment() {
     const [appointments, setAppointments] = useState([]);
@@ -23,9 +23,7 @@ function ViewAppointment() {
 
     return (
         <div className="container">
-
             <div className="appointments">
-
                 <div className="appointments-grid">
                     {appointments.map((appt) => (
                         <div key={appt._id} className="card">
@@ -33,6 +31,7 @@ function ViewAppointment() {
                             <p><strong>Date:</strong> {appt.date}</p>
                             <p><strong>Time:</strong> {appt.time}</p>
                             <p><strong>Reason:</strong> {appt.reason}</p>
+                            <p><strong>Email:</strong> {appt.email}</p> {/* Display email */}
                             <p className={`status ${appt.status.toLowerCase()}`}>
                                 <strong>Status:</strong> {appt.status}
                             </p>

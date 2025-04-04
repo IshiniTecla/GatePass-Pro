@@ -9,6 +9,7 @@ const AppointmentForm = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: "",
+        email: "",  // ✅ Added email
         date: "",
         time: "",
         reason: "",
@@ -57,6 +58,17 @@ const AppointmentForm = () => {
                             className="form-control"
                             name="name"
                             value={formData.name}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label>Email:</label> {/* ✅ New email field */}
+                        <input
+                            type="email"
+                            className="form-control"
+                            name="email"
+                            value={formData.email}
                             onChange={handleChange}
                             required
                         />

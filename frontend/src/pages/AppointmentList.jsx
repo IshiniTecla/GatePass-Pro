@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./AppointmentList.css"
+import "./AppointmentList.css";
 
 function AppointmentList({ isHost }) {
     const [appointments, setAppointments] = useState([]);
-    const [confirmDelete, setConfirmDelete] = useState(null); // Store appointment ID for confirmation
+    const [confirmDelete, setConfirmDelete] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,7 +32,7 @@ function AppointmentList({ isHost }) {
         try {
             await axios.delete(`http://localhost:5000/api/appointments/${id}`);
             setAppointments(appointments.filter((appt) => appt._id !== id));
-            setConfirmDelete(null); // Close confirmation modal
+            setConfirmDelete(null);
         } catch (error) {
             console.error("Error deleting appointment:", error);
         }
@@ -56,6 +56,9 @@ function AppointmentList({ isHost }) {
                         </p>
                         <p>
                             <strong>Reason:</strong> {appt.reason || "Not Provided"}
+                        </p>
+                        <p>
+                            <strong>Email:</strong> {appt.email || "Not Provided"}
                         </p>
                         <p className={`status ${appt.status.toLowerCase()}`}>
                             <strong>Status:</strong> {appt.status}
@@ -98,7 +101,6 @@ function AppointmentList({ isHost }) {
                 ))}
             </div>
 
-            {/* Delete Confirmation Overlay */}
             {confirmDelete && (
                 <div className="confirmation-overlay">
                     <div className="confirmation-box">

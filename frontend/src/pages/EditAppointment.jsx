@@ -10,7 +10,8 @@ function EditAppointment() {
         name: '',
         date: '',
         time: '',
-        reason: ''
+        reason: '',
+        email: ''  // Added email field
     });
     const [error, setError] = useState(null);
 
@@ -74,6 +75,14 @@ function EditAppointment() {
                     value={formData.reason}
                     onChange={handleChange}
                     placeholder="Describe the reason for your appointment"
+                    required
+                />
+                <input
+                    type="email"  // Added email field with validation
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
                     required
                 />
                 <button type="submit" className="update">Update Appointment</button>

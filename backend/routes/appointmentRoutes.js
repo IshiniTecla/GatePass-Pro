@@ -6,14 +6,14 @@ const router = express.Router();
 // Create Appointment
 router.post("/", async (req, res) => {
   try {
-    const { name, date, time, reason } = req.body;
+    const { name, email, date, time, reason } = req.body;
 
     // Validate required fields
-    if (!name || !date || !time || !reason) {
+    if (!name || !email || !date || !time || !reason) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    const appointment = new Appointment({ name, date, time, reason });
+    const appointment = new Appointment({ name, email, date, time, reason });
     await appointment.save();
 
     res.status(201).json({
