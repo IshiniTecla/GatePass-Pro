@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
-import appointmentRoutes from "./routes/appointmentRoutes.js";
 import visitorRoutes from "./routes/visitorRoutes.js";
 
 dotenv.config();
@@ -25,7 +24,6 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/feedback", feedbackRoutes);
-app.use("/api/appointments", appointmentRoutes);
 app.use("/api/visitor", visitorRoutes); // Ensure route prefix matches frontend
 
 // MongoDB connection
