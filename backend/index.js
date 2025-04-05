@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import appointmentRoutes from "./routes/appointmentRoutes.js";
+import appointmentRoutes from "./routes/appointmentRoute.js";
 
 dotenv.config();
 
