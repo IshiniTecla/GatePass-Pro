@@ -17,7 +17,7 @@ const App = () => {
         <Route path="/edit-feedback/:id" element={<EditFeedback />} />
         <Route path="/feedback-form" element={<FeedbackForm />} />
         <Route path="/feedback-list" element={<FeedbackList />} />
-        <Route path="/visitor-dashboard" element={<VisitorDashboard />} />
+        <Route path="" element={<VisitorDashboard />} />
         <Route path="/host-dashboard" element={<HostDashboard />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/face-recognition" element={<FaceRecognition />} />
