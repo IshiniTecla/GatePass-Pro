@@ -1,35 +1,31 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+import VisitorDashboard from "./pages/Dashboards/VisitorDashboard"
+import AppointmentForm from "./pages/AppointmentForm"
+import AppointmentList from "./pages/AppointmentList"
+import EditAppointment from "./pages/EditAppointment";
+import HostDashboard from './pages/Dashboards/HostDashboard';
+import ViewAppointment from './pages/ViewAppointment';
 
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        
+        <Route path="/edit-Appointment/:id" element={<EditAppointment />}/>
+        <Route path="/visitor-dashboard" element={<VisitorDashboard />} />
+        <Route path="/host-dashboard" element={<HostDashboard />} />
+        <Route path="/appointment-form" element={<AppointmentForm />} />
+        <Route path="/appointment-list" element={<AppointmentList />} />
+        <Route path="/view-appointment" element={<ViewAppointment />} />
+      </Routes>
+    </Router>
+  );
+};
+
+
+
 
 export default App
