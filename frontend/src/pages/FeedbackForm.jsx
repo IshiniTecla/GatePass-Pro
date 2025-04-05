@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { submitFeedback } from "../services/feedbackService";
 import { useNavigate } from "react-router-dom";
 import { useSnackbar } from 'notistack';
+import { Spinner } from 'react-bootstrap'; // Import Spinner
 import "./FeedbackForm.css";
 
 const FeedbackForm = () => {
@@ -99,7 +100,13 @@ const FeedbackForm = () => {
                         />
                     </div>
                     <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-                        {loading ? "Submitting..." : "Submit Feedback"}
+                        {loading ? (
+                            <>
+                                <Spinner animation="border" size="sm" /> Submitting...
+                            </>
+                        ) : (
+                            "Submit Feedback"
+                        )}
                     </button>
                 </form>
             </div>

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Form, Button, Container } from "react-bootstrap";
+import { Form, Button, Container, Spinner } from "react-bootstrap";
 import { useSnackbar } from 'notistack';
 import "./ManualCheckIn.css";
 
@@ -12,10 +12,12 @@ const ManualCheckIn = () => {
     const [checkInTime, setCheckInTime] = useState("");
     const [otp, setOtp] = useState("");
     const [otpSent, setOtpSent] = useState(false);
+    const [loading, setLoading] = useState(false);  // Added loading state
 
     // **Send OTP to the visitor's email**
     const sendOtp = async (e) => {
         e.preventDefault();
+        setLoading(true);  // Set loading to true when sending OTP
 
         try {
             const response = await axios.post("http://localhost:5000/api/visitor/send-otp", {
@@ -34,11 +36,15 @@ const ManualCheckIn = () => {
                 variant: 'error',
                 autoHideDuration: 2000,  // Snackbar disappears after 2 seconds
             });
+        } finally {
+            setLoading(false);  // Set loading to false after request completes
         }
     };
 
     // **Verify OTP & Check-In**
     const verifyOtpAndCheckIn = async () => {
+        setLoading(true);  // Set loading to true when verifying OTP and checking in
+
         try {
             const requestData = {
                 visitorName,
@@ -63,6 +69,8 @@ const ManualCheckIn = () => {
                 variant: 'error',
                 autoHideDuration: 2000,  // Snackbar disappears after 2 seconds
             });
+        } finally {
+            setLoading(false);  // Set loading to false after request completes
         }
     };
 
@@ -124,15 +132,15 @@ const ManualCheckIn = () => {
                                     required
                                 />
                             </Form.Group>
-                            <Button variant="primary" type="submit">
-                                Verify & Check In
+                            <Button variant="primary" type="submit" disabled={loading}>
+                                {loading ? <Spinner animation="border" size="sm" /> : "Verify & Check In"}
                             </Button>
                         </>
                     )}
 
                     {!otpSent && (
-                        <Button variant="secondary" type="submit" style={{ marginTop: "20px" }}>
-                            Send OTP
+                        <Button variant="secondary" type="submit" style={{ marginTop: "20px" }} disabled={loading}>
+                            {loading ? <Spinner animation="border" size="sm" /> : "Send OTP"}
                         </Button>
                     )}
                 </Form>

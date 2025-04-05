@@ -45,7 +45,7 @@ const FeedbackList = () => {
 
     return (
         <Container className="feedback-list-container">
-            <h2 className="text-center mt-4 mb-3">Visitor Feedback</h2>
+            <h2 className="text-center mt-4 mb-3">Your Feedbacks</h2>
 
             {showThankYou && (
                 <div className="thank-you-message">
