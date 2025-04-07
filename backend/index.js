@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import appointmentRoutes from "./routes/appointmentRoute.js";
+import appointmentRoute from "./routes/appointmentRoute.js";
 
 dotenv.config();
 
@@ -11,7 +11,7 @@ const app = express();
 // Middleware setup
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: process.env.FRONTEND_URL || "http://localhost:5177",
   })
 );
 app.use(express.json());
@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-app.use("/api/appointments", appointmentRoutes);
+app.use("/api/appointments", appointmentRoute);
 
 
 // MongoDB connection

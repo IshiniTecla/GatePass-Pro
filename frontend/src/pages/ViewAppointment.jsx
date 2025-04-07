@@ -14,12 +14,16 @@ function ViewAppointment() {
 
     const handleStatusChange = async (id, status) => {
         try {
-            await axios.put(`http://localhost:5000/api/appointments/${id}`, { status });
+            // Use the correct route for updating the status
+            await axios.put(`http://localhost:5000/api/appointments/status/${id}`, { status });
+            
+            // Update the state to reflect the status change
             setAppointments(appointments.map(appt => appt._id === id ? { ...appt, status } : appt));
         } catch (error) {
             console.error('Error updating appointment status:', error);
         }
     };
+    
 
     return (
         <div className="container">

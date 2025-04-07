@@ -65,19 +65,20 @@ router.get("/user/:name", async (req, res) => {
   }
 });
 
-// Update Appointment Status
+// Update Appointment (name, date, time, reason)
 router.put("/:id", async (req, res) => {
   try {
-    const { status } = req.body;
+    const { name, date, time, reason } = req.body;
 
-    if (!status) {
-      return res.status(400).json({ message: "Status is required." });
+    // Validate required fields
+    if (!name || !date || !time || !reason) {
+      return res.status(400).json({ message: "All fields are required." });
     }
 
     const appointment = await Appointment.findByIdAndUpdate(
       req.params.id,
-      { status },
-      { new: true }
+      { name, date, time, reason },  // Update all fields
+      { new: true }  // Return the updated document
     );
 
     if (!appointment) {
@@ -89,13 +90,14 @@ router.put("/:id", async (req, res) => {
       appointment,
     });
   } catch (error) {
-    console.error("Error updating appointment status:", error);
+    console.error("Error updating appointment:", error);
     res.status(500).json({
-      message: "Error updating appointment status.",
+      message: "Error updating appointment.",
       error: error.message,
     });
   }
 });
+
 
 // Delete Appointment
 router.delete("/:id", async (req, res) => {
@@ -134,5 +136,39 @@ router.get("/:id", async (req, res) => {
     });
   }
 });
+
+// Update Appointment Status (Approve/Reject)
+router.put("/status/:id", async (req, res) => {
+  try {
+    const { status } = req.body;  // Status should be passed in the request body
+
+    if (!status || (status !== 'Approved' && status !== 'Rejected')) {
+      return res.status(400).json({ message: "Status must be 'Approved' or 'Rejected'." });
+    }
+
+    // Update only the status of the appointment
+    const appointment = await Appointment.findByIdAndUpdate(
+      req.params.id,
+      { status },  // Update only the status
+      { new: true }
+    );
+
+    if (!appointment) {
+      return res.status(404).json({ message: "Appointment not found." });
+    }
+
+    res.json({
+      message: "Appointment status updated successfully!",
+      appointment,
+    });
+  } catch (error) {
+    console.error("Error updating appointment status:", error);
+    res.status(500).json({
+      message: "Error updating appointment status.",
+      error: error.message,
+    });
+  }
+});
+
 
 export default router;
