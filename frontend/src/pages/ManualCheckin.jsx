@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Form, Button, Container, Spinner } from "react-bootstrap";
 import { useSnackbar } from 'notistack';
+import { useNavigate } from 'react-router-dom';
 import "./ManualCheckIn.css";
 
 const ManualCheckIn = () => {
-    const { enqueueSnackbar } = useSnackbar();  // Initialize snackbar
+    const { enqueueSnackbar } = useSnackbar();
+    const navigate = useNavigate();
     const [visitorName, setVisitorName] = useState("");
     const [email, setEmail] = useState("");
     const [contactNumber, setContactNumber] = useState("");
@@ -63,6 +65,10 @@ const ManualCheckIn = () => {
                 variant: 'success',
                 autoHideDuration: 2000,  // Snackbar disappears after 2 seconds
             });
+
+            // Navigate to the BadgePrint page and pass visitor details
+            navigate("/badge-print", { state: { visitorDetails: response.data } });
+
         } catch (error) {
             console.error("Check-in Error:", error.response?.data || error.message);
             enqueueSnackbar("Check-in failed. Please try again.", {
