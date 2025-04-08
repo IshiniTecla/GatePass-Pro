@@ -1,7 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import * as tf from "@tensorflow/tfjs";
 import * as blazeface from "@tensorflow-models/blazeface";
-import "./FaceRecognition.css"
+import axios from "axios"; // Assuming axios is used for API requests
 
 const FaceRecognition = () => {
     const videoRef = useRef(null);
@@ -90,20 +89,51 @@ const FaceRecognition = () => {
         }
     };
 
+    // Inline styles
+    const styles = {
+        container: {
+            textAlign: "center",
+            padding: "20px",
+        },
+        videoContainer: {
+            position: "relative",
+            width: "100%",
+            maxWidth: "500px",
+            margin: "auto",
+        },
+        video: {
+            position: "absolute",
+            width: "100%",
+            height: "auto",
+        },
+        canvas: {
+            position: "absolute",
+            width: "100%",
+            height: "auto",
+        },
+        button: {
+            marginTop: "20px",
+            padding: "10px 20px",
+            fontSize: "16px",
+            display: "block",
+            margin: "auto",
+        },
+    };
+
     return (
-        <div style={{ textAlign: "center", padding: "20px" }}>
+        <div style={styles.container}>
             <h2>Visitor Face Recognition</h2>
             {isLoading && <p>Loading model...</p>}
 
-            <div style={{ position: "relative", width: "500px", margin: "auto" }}>
-                <video ref={videoRef} width="500" height="400" style={{ position: "absolute" }} />
-                <canvas ref={canvasRef} width="500" height="400" style={{ position: "absolute" }} />
+            <div style={styles.videoContainer}>
+                <video ref={videoRef} style={styles.video} />
+                <canvas ref={canvasRef} style={styles.canvas} />
             </div>
 
             <button
                 onClick={handleCheckInOut}
                 disabled={!isFaceDetected}
-                style={{ marginTop: "20px", padding: "10px 20px", fontSize: "16px" }}
+                style={styles.button}
             >
                 Check In / Check Out
             </button>

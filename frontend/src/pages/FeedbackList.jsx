@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getFeedbackList, deleteFeedback } from "../services/feedbackService";
 import { Link, useLocation } from "react-router-dom";
-import { Card, Button, Container } from "react-bootstrap";
+import { Button, Container, Card } from "react-bootstrap";
 import { useSnackbar } from "notistack";
-import "./FeedbackList.css";
 
 const FeedbackList = () => {
     const [feedbacks, setFeedbacks] = useState([]);
@@ -43,32 +42,106 @@ const FeedbackList = () => {
         enqueueSnackbar("Redirecting to edit feedback...", { variant: "info" });
     };
 
+    // Inline styles
+    const styles = {
+        feedbackListContainer: {
+            maxWidth: '900px',
+            margin: '50px auto',
+            padding: '20px',
+            backgroundColor: '#ffffff',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            borderRadius: '8px',
+        },
+        heading: {
+            textAlign: 'center',
+            color: '#333',
+            fontWeight: '600',
+            marginBottom: '20px',
+        },
+        thankYouMessage: {
+            textAlign: 'center',
+            color: '#007bff',
+            fontSize: '24px',
+            fontWeight: '600',
+            marginTop: '30px',
+        },
+        thankYouSpan: {
+            fontSize: '36px',
+            marginLeft: '10px',
+        },
+        feedbackCard: {
+            backgroundColor: '#f9f9f9',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+            marginBottom: '15px',
+        },
+        cardTitle: {
+            fontSize: '18px',
+            fontWeight: '600',
+        },
+        cardSubtitle: {
+            marginBottom: '10px',
+            color: '#888',
+        },
+        cardText: {
+            fontSize: '16px',
+            color: '#333',
+        },
+        button: {
+            marginRight: '10px',
+        },
+        btnWarning: {
+            backgroundColor: '#ffc107',
+            borderColor: '#ffc107',
+        },
+        btnWarningHover: {
+            backgroundColor: '#e0a800',
+        },
+        btnDanger: {
+            backgroundColor: '#dc3545',
+            borderColor: '#dc3545',
+        },
+        btnDangerHover: {
+            backgroundColor: '#c82333',
+        },
+    };
+
     return (
-        <Container className="feedback-list-container">
-            <h2 className="text-center mt-4 mb-3">Your Feedbacks</h2>
+        <Container style={styles.feedbackListContainer}>
+            <h2 style={styles.heading}>Your Feedbacks</h2>
 
             {showThankYou && (
-                <div className="thank-you-message">
-                    <h3>Thank you for your feedback!<span>😊</span></h3>
+                <div style={styles.thankYouMessage}>
+                    <h3>Thank you for your feedback!<span style={styles.thankYouSpan}>😊</span></h3>
                 </div>
             )}
 
             {feedbacks.length > 0 ? (
                 feedbacks.map((feedback) => (
-                    <Card key={feedback._id} className="mb-3 feedback-card">
+                    <Card key={feedback._id} style={styles.feedbackCard}>
                         <Card.Body>
-                            <Card.Title>{feedback.visitorName}</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">{feedback.email}</Card.Subtitle>
-                            <Card.Text>
+                            <Card.Title style={styles.cardTitle}>{feedback.visitorName}</Card.Title>
+                            <Card.Subtitle style={styles.cardSubtitle}>{feedback.email}</Card.Subtitle>
+                            <Card.Text style={styles.cardText}>
                                 <strong>Rating:</strong> {feedback.rating} <br />
                                 <strong>Comments:</strong> {feedback.comments}
                             </Card.Text>
                             <Link to={`/edit-feedback/${feedback._id}`}>
-                                <Button variant="warning" onClick={() => handleEdit(feedback._id)} className="me-2">
+                                <Button
+                                    variant="warning"
+                                    onClick={() => handleEdit(feedback._id)}
+                                    style={styles.btnWarning}
+                                    className="me-2"
+                                >
                                     Edit
                                 </Button>
                             </Link>
-                            <Button variant="danger" onClick={() => handleDelete(feedback._id)}>
+                            <Button
+                                variant="danger"
+                                onClick={() => handleDelete(feedback._id)}
+                                style={styles.btnDanger}
+                            >
                                 Delete
                             </Button>
                         </Card.Body>

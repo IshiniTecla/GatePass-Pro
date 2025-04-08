@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getFeedbackById, updateFeedback } from "../services/feedbackService";
 import { useSnackbar } from "notistack";
-import "./FeedbackForm.css";
+import { Spinner } from 'react-bootstrap'; // Import Spinner
 
 const EditFeedback = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -50,12 +50,49 @@ const EditFeedback = () => {
         }
     };
 
+    // Inline styles
+    const styles = {
+        feedbackFormContainer: {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh',
+            backgroundColor: '#f8f9fa',
+        },
+        feedbackCard: {
+            width: '100%',
+            maxWidth: '500px',
+            background: 'white',
+            padding: '20px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+        },
+        heading: {
+            textAlign: 'center',
+            marginBottom: '20px',
+            color: '#333',
+        },
+        formGroup: {
+            marginBottom: '15px',
+        },
+        formControl: {
+            borderRadius: '4px',
+        },
+        formSelect: {
+            borderRadius: '4px',
+        },
+        submitButton: {
+            width: '100%',
+            marginTop: '20px',
+        },
+    };
+
     return (
-        <div className="feedback-form-container">
-            <div className="feedback-card">
-                <h2 className="text-center mb-4">Edit Feedback</h2>
+        <div style={styles.feedbackFormContainer}>
+            <div style={styles.feedbackCard}>
+                <h2 style={styles.heading}>Edit Feedback</h2>
                 <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
+                    <div style={styles.formGroup}>
                         <label className="form-label">Visitor Name:</label>
                         <input
                             type="text"
@@ -64,9 +101,10 @@ const EditFeedback = () => {
                             value={formData.visitorName}
                             onChange={handleChange}
                             required
+                            style={styles.formControl}
                         />
                     </div>
-                    <div className="mb-3">
+                    <div style={styles.formGroup}>
                         <label className="form-label">Email:</label>
                         <input
                             type="email"
@@ -75,15 +113,17 @@ const EditFeedback = () => {
                             value={formData.email}
                             onChange={handleChange}
                             required
+                            style={styles.formControl}
                         />
                     </div>
-                    <div className="mb-3">
+                    <div style={styles.formGroup}>
                         <label className="form-label">Rating:</label>
                         <select
                             className="form-select"
                             name="rating"
                             value={formData.rating}
                             onChange={handleChange}
+                            style={styles.formSelect}
                         >
                             {[1, 2, 3, 4, 5].map((num) => (
                                 <option key={num} value={num}>
@@ -92,7 +132,7 @@ const EditFeedback = () => {
                             ))}
                         </select>
                     </div>
-                    <div className="mb-3">
+                    <div style={styles.formGroup}>
                         <label className="form-label">Comments:</label>
                         <textarea
                             className="form-control"
@@ -101,9 +141,10 @@ const EditFeedback = () => {
                             value={formData.comments}
                             onChange={handleChange}
                             required
+                            style={styles.formControl}
                         />
                     </div>
-                    <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                    <button type="submit" className="btn btn-primary" disabled={loading} style={styles.submitButton}>
                         {loading ? "Updating..." : "Update Feedback"}
                     </button>
                 </form>

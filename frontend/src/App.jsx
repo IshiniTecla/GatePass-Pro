@@ -9,6 +9,7 @@ import ManualCheckIn from "./pages/ManualCheckin";
 import HomePage from "./pages/Home";
 import AboutUsPage from "./pages/AboutUsPage";
 import RegisterPage from "./pages/Register";
+import ExpertsPage from "./pages/ExpertsPage";
 
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="" element={<HomePage />} />
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/experts" element={<ExpertsPage />} />
       </Routes>
     </Router>
   );
