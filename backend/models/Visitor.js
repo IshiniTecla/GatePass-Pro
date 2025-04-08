@@ -1,13 +1,59 @@
-import mongoose from "mongoose";
+// models/Visitor.js
+const mongoose = require('mongoose');
 
 const visitorSchema = new mongoose.Schema({
-  visitorName: { type: String, required: false },
-  email: { type: String, required: false },
-  contactNumber: { type: String, required: false },
-  photo: { type: String, required: false },
-  checkInTime: { type: Date, required: false },
-  otp: { type: String, required: false }, // OTP for verification
-  isVerified: { type: Boolean, default: false }, // Admin verification status
+  fullName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  email: {
+    type: String,
+    required: true,
+    trim: true,
+    lowercase: true
+  },
+  
+  purpose: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  host: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Host',
+    required: true
+  },
+  appointmentDate: {
+    type: Date
+  },
+  appointmentTime: {
+    type: String
+  },
+  checkInTime: {
+    type: Date
+  },
+  checkOutTime: {
+    type: Date
+  },
+  badge: {
+    type: String
+  },
+  type: {
+    type: String,
+    enum: ['scheduled', 'walk-in', 'event', 'vendor'],
+    default: 'scheduled'
+  },
+  status: {
+    type: String,
+    enum: ['scheduled', 'checked-in', 'checked-out', 'cancelled', 'no-show'],
+    default: 'scheduled'
+  },
+  notes: {
+    type: String
+  }
+}, {
+  timestamps: true
 });
 
-export default mongoose.model("Visitor", visitorSchema);
+module.exports = mongoose.model('Visitor', visitorSchema);
