@@ -1,8 +1,8 @@
 // config/default.js
-module.exports = {
+
+export const config = {
   // MongoDB connection string
-  mongoURI:
-    process.env.MONGO_URI || "mongodb://localhost:27017/visitor-management",
+  mongoURI: process.env.MONGO_URI || "mongodb://localhost:27017/gatepass-pro",
 
   // JWT Secret for token signing
   jwtSecret: process.env.JWT_SECRET || "c23Z!1hJ@k3bLw$BfR92pTnG9",
@@ -21,9 +21,9 @@ module.exports = {
     host: process.env.EMAIL_HOST || "smtp.gmail.com",
     port: process.env.EMAIL_PORT || 587,
     secure: process.env.EMAIL_SECURE === "true" || false,
-    user: process.env.EMAIL_USER || "getepasspro@gmail.com",
-    password: process.env.EMAIL_PASSWORD || "mnjs snaf qzlz nmno",
-    from: process.env.EMAIL_FROM || "GetePassPro <getepasspro@gmail.com>",
+    user: process.env.EMAIL_USER || "progatepass@gmail.com",
+    password: process.env.EMAIL_PASSWORD || "lbss bjst miiu scum",
+    from: process.env.EMAIL_FROM || "GatePassPro <progatepass@gmail.com>",
   },
 
   // Upload file size limit

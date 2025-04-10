@@ -1,100 +1,100 @@
-const Visitor = require('../models/Visitor');
-const moment = require('moment');
+import Visitor from "../models/Visitor.js";
+import moment from "moment";
 
-exports.getVisitorStatistics = async (req, res) => {
+export const getVisitorStatistics = async (req, res) => {
   try {
     // Get today's date at start of day
-    const today = moment().startOf('day');
-    
+    const today = moment().startOf("day");
+
     // Calculate week start and end dates
-    const weekStart = moment().startOf('week');
-    const weekEnd = moment().endOf('week');
-    
+    const weekStart = moment().startOf("week");
+    const weekEnd = moment().endOf("week");
+
     // Get total visitors today
     const totalVisitorsToday = await Visitor.countDocuments({
-      createdAt: { $gte: today.toDate() }
+      createdAt: { $gte: today.toDate() },
     });
-    
+
     // Get total appointments scheduled for today
     const todayAppointments = await Visitor.countDocuments({
       appointmentDate: {
         $gte: today.toDate(),
-        $lt: moment(today).endOf('day').toDate()
+        $lt: moment(today).endOf("day").toDate(),
       },
-      status: 'Scheduled'
+      status: "Scheduled",
     });
-    
+
     // Get currently checked in visitors
     const checkedIn = await Visitor.countDocuments({
-      status: 'Checked In',
-      checkOutTime: null
+      status: "Checked In",
+      checkOutTime: null,
     });
-    
+
     // Get visitor counts for each day of the current week
     const weeklyVisitors = await Visitor.aggregate([
       {
         $match: {
           createdAt: {
             $gte: weekStart.toDate(),
-            $lte: weekEnd.toDate()
-          }
-        }
+            $lte: weekEnd.toDate(),
+          },
+        },
       },
       {
         $group: {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       {
-        $sort: { _id: 1 }
-      }
+        $sort: { _id: 1 },
+      },
     ]);
-    
+
     // Generate array of all days in the week
     const weeklyLabels = [];
     const weeklyData = [];
-    
+
     for (let i = 0; i < 7; i++) {
-      const day = moment(weekStart).add(i, 'days');
-      const dayStr = day.format('YYYY-MM-DD');
-      weeklyLabels.push(day.format('ddd'));
-      
+      const day = moment(weekStart).add(i, "days");
+      const dayStr = day.format("YYYY-MM-DD");
+      weeklyLabels.push(day.format("ddd"));
+
       // Find count for this day
-      const dayData = weeklyVisitors.find(item => item._id === dayStr);
+      const dayData = weeklyVisitors.find((item) => item._id === dayStr);
       weeklyData.push(dayData ? dayData.count : 0);
     }
-    
+
     // Get visitor type stats
     const visitorTypeData = await Visitor.aggregate([
       {
         $group: {
           _id: "$type",
-          count: { $sum: 1 }
-        }
-      }
+          count: { $sum: 1 },
+        },
+      },
     ]);
-    
+
     // Format visitor type data
     const visitorTypes = [0, 0, 0, 0]; // [Appointments, Walk-ins, Deliveries, Interviews]
-    
-    visitorTypeData.forEach(type => {
-      switch(type._id) {
-        case 'Appointment':
+
+    visitorTypeData.forEach((type) => {
+      switch (type._id) {
+        case "Appointment":
           visitorTypes[0] = type.count;
           break;
-        case 'Walk-in':
+        case "Walk-in":
           visitorTypes[1] = type.count;
           break;
-        case 'Delivery':
+        case "Delivery":
           visitorTypes[2] = type.count;
           break;
-        case 'Interview':
+        case "Interview":
           visitorTypes[3] = type.count;
           break;
       }
     });
-    
+
     // Return formatted statistics
     return res.status(200).json({
       totalVisitors: totalVisitorsToday,
@@ -102,11 +102,12 @@ exports.getVisitorStatistics = async (req, res) => {
       checkedIn,
       weeklyLabels,
       weeklyData,
-      visitorTypes
+      visitorTypes,
     });
-    
   } catch (error) {
-    console.error('Error getting visitor statistics:', error);
-    return res.status(500).json({ error: 'Server error while retrieving statistics' });
+    console.error("Error getting visitor statistics:", error);
+    return res
+      .status(500)
+      .json({ error: "Server error while retrieving statistics" });
   }
 };

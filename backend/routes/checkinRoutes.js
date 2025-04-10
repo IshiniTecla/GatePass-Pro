@@ -1,5 +1,4 @@
 import express from "express";
-import Checkin from "../models/Checkin.js";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from "dotenv";

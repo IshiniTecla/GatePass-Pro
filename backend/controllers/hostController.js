@@ -1,11 +1,11 @@
-const Host = require("../models/Host");
-const User = require("../models/User");
-const { sendHostProfileEmail } = require("../utils/emailService");
-const fs = require("fs");
-const path = require("path");
+import Host from "../models/Host.js"; // Adjust according to your model path
+import User from "../models/User.js"; // Adjust according to your model path
+import { sendHostProfileEmail } from "../utils/emailService.js";
+import fs from "fs";
+import path from "path";
 
 // Create a new host profile
-const createHostProfile = async (req, res) => {
+export const createHostProfile = async (req, res) => {
   try {
     // Retrieve the user from JWT
     const userId = req.user.id;
@@ -83,7 +83,7 @@ const createHostProfile = async (req, res) => {
 };
 
 // Fetch the current user's host profile
-const getHostProfile = async (req, res) => {
+export const getHostProfile = async (req, res) => {
   try {
     // Check if user ID exists
     if (!req.user || !req.user.id) {
@@ -106,7 +106,7 @@ const getHostProfile = async (req, res) => {
 };
 
 // Get all available hosts (for public viewing)
-const getAvailableHosts = async (req, res) => {
+export const getAvailableHosts = async (req, res) => {
   try {
     const hosts = await Host.find({ isActive: true, isApproved: true })
       .select("-password -user -__v")
@@ -120,7 +120,7 @@ const getAvailableHosts = async (req, res) => {
 };
 
 // Update host profile
-const updateHostProfile = async (req, res) => {
+export const updateHostProfile = async (req, res) => {
   try {
     // Check if user ID exists
     if (!req.user || !req.user.id) {
@@ -190,7 +190,7 @@ const updateHostProfile = async (req, res) => {
 };
 
 // Get host by ID
-const getHostById = async (req, res) => {
+export const getHostById = async (req, res) => {
   try {
     const host = await Host.findOne({ hostID: req.params.hostId })
       .select("-password -user")
@@ -205,12 +205,4 @@ const getHostById = async (req, res) => {
     console.error("Error fetching host by ID:", error);
     res.status(500).json({ message: "Server error fetching host profile" });
   }
-};
-
-module.exports = {
-  createHostProfile,
-  getHostProfile,
-  getAvailableHosts,
-  updateHostProfile,
-  getHostById,
 };
