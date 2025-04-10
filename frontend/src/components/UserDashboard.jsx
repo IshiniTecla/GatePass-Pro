@@ -9,6 +9,7 @@ import {
   Home,
   Bell,
   LogOut,
+  CheckCircle,
   MessageCircle,
   Menu,
   ChevronLeft,
@@ -144,6 +145,7 @@ const UserDashboard = () => {
   const menuItems = [
     { name: "Overview", icon: <ChartLine size={20} /> },
     { name: "Profile", icon: <User size={20} /> },
+    { name: "Check-in", icon: <CheckCircle size={20} /> },
     { name: "Host Directory", icon: <Book size={20} /> },
     { name: "Appointment", icon: <Calendar size={20} /> },
     { name: "QR Scanner", icon: <QrCode size={20} /> },
@@ -207,7 +209,7 @@ const UserDashboard = () => {
         <div className="logo-container">
           <div className="logo-wrapper">
             <div className="logo">GP</div>
-            {!collapsed && <span className="logo-text">GetePass Pro</span>}
+            {!collapsed && <span className="logo-text">GatePass Pro</span>}
           </div>
           {!collapsed && (
             <button onClick={toggleSidebar} className="collapse-btn">

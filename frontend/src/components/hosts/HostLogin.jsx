@@ -43,7 +43,7 @@ const HostLogin = () => {
       backgroundColor: '#f5f5f5',
       fontFamily: 'Arial, sans-serif'
     }}>
-      <form 
+      <form
         style={{
           width: '100%',
           maxWidth: '400px',
@@ -54,7 +54,7 @@ const HostLogin = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: '20px'
-        }} 
+        }}
         onSubmit={handleSubmit}
       >
         <h2 style={{
@@ -63,7 +63,7 @@ const HostLogin = () => {
           color: '#333',
           fontSize: '24px'
         }}>Host Login</h2>
-        
+
         <input
           type="email"
           placeholder="Email"
@@ -81,7 +81,7 @@ const HostLogin = () => {
             boxSizing: 'border-box'
           }}
         />
-        
+
         <input
           type="password"
           placeholder="Password"
@@ -99,8 +99,8 @@ const HostLogin = () => {
             boxSizing: 'border-box'
           }}
         />
-        
-        <button 
+
+        <button
           type="submit"
           style={{
             backgroundColor: '#4a90e2',
