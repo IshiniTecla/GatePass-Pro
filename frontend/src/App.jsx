@@ -5,6 +5,7 @@ import FeedbackForm from "./pages/FeedbackForm";
 import FeedbackList from "./pages/FeedbackList";
 import CreateHostProfile from "./components/hosts/CreateHostProfile";
 import EditFeedback from "./pages/EditFeedback";
+import CheckInOptions from "./components/CheckInOptions";
 import FaceRecognition from "./components/user/FaceScannerCheckIn";
 import ManualCheckIn from "./components/user/ManualCheckin";
 import HomePage from "./pages/Home";
@@ -64,10 +65,12 @@ function App() {
             <CreateHostProfile />
           </ProtectedRoute>
         } />
+
         <Route path="/edit-feedback/:id" element={<EditFeedback />} />
         <Route path="/feedback-form" element={<FeedbackForm />} />
         <Route path="/feedback-list" element={<FeedbackList />} />
-        <Route path="/face-recognition" element={<FaceRecognition />} />
+        <Route path="/checkin" element={<CheckInOptions />} />
+        <Route path="/face-checkin" element={<FaceRecognition />} />
         <Route path="/manual-checkin" element={<ManualCheckIn />} />
         <Route path="/about-us" element={<AboutUsPage />} />
         <Route path="/register" element={<RegisterPage />} />

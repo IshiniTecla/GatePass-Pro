@@ -63,7 +63,7 @@ const ManualCheckIn = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/visitor/send-otp", {
+            const response = await axios.post("http://localhost:5000/api/checkin/send-otp", {
                 email,
             });
 
@@ -98,7 +98,7 @@ const ManualCheckIn = () => {
 
             console.log("Sending Data to Backend:", requestData);
 
-            const response = await axios.post("http://localhost:5000/api/visitor/verify-otp", requestData);
+            const response = await axios.post("http://localhost:5000/api/checkin/verify-otp", requestData);
 
             console.log("Check-in Success:", response.data);
             enqueueSnackbar("Check-in successful!", {
