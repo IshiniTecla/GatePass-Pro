@@ -3,6 +3,9 @@ import axios from "axios";
 import { Form, Button, Container, Spinner } from "react-bootstrap";
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
+import html2canvas from "html2canvas";
+import ReactDOM from "react-dom";
+
 
 const ManualCheckIn = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -96,17 +99,27 @@ const ManualCheckIn = () => {
                 otp: otp.toString(),
             };
 
-            console.log("Sending Data to Backend:", requestData);
-
             const response = await axios.post("http://localhost:5000/api/checkin/verify-otp", requestData);
+            const visitorData = response.data;
 
-            console.log("Check-in Success:", response.data);
-            enqueueSnackbar("Check-in successful!", {
-                variant: 'success',
-                autoHideDuration: 2000,
+            enqueueSnackbar("Check-in successful!", { variant: 'success', autoHideDuration: 2000 });
+
+            // Create a temporary div to render badge
+            const tempDiv = document.createElement("div");
+            document.body.appendChild(tempDiv);
+
+            ReactDOM.render(<Badge visitor={visitorData} ref={tempDiv} />, tempDiv);
+
+            await html2canvas(tempDiv).then(canvas => {
+                const link = document.createElement("a");
+                link.download = `${visitorData.visitorName}_badge.png`;
+                link.href = canvas.toDataURL();
+                link.click();
             });
 
-            navigate("/badge-print", { state: { visitorDetails: response.data } });
+            document.body.removeChild(tempDiv);
+
+            navigate("/dashboard");
         } catch (error) {
             console.error("Check-in Error:", error.response?.data || error.message);
             enqueueSnackbar("Check-in failed. Please try again.", {
@@ -117,6 +130,7 @@ const ManualCheckIn = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <Container style={styles.manualCheckInContainer}>

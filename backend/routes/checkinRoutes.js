@@ -1,5 +1,6 @@
 import express from "express";
 import nodemailer from "nodemailer";
+import Checkin from "../models/Checkin.js";
 import crypto from "crypto";
 import dotenv from "dotenv";
 
@@ -23,13 +24,13 @@ const transporter = nodemailer.createTransport({
 // Generate OTP function
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
-// **GET All Visitors**
+// **GET All Checkins (Visitors)**
 router.get("/all", async (req, res) => {
   try {
-    const visitors = await Visitor.find();
+    const visitors = await Checkin.find();
     res.status(200).json(visitors);
   } catch (error) {
-    console.error("Fetch Visitors Error:", error);
+    console.error("Fetch Checkins Error:", error);
     res.status(500).json({ message: "Failed to fetch visitors", error });
   }
 });
@@ -45,7 +46,7 @@ router.post("/send-otp", async (req, res) => {
 
     const otp = generateOTP();
 
-    const visitor = new Visitor({
+    const visitor = new Checkin({
       email,
       otp,
       isVerified: false,
@@ -88,7 +89,7 @@ router.post("/verify-otp", async (req, res) => {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    const visitor = await Visitor.findOne({ email });
+    const visitor = await Checkin.findOne({ email }); // Corrected model to Checkin
 
     if (!visitor) {
       return res.status(404).json({ message: "Visitor not found." });
@@ -114,29 +115,6 @@ router.post("/verify-otp", async (req, res) => {
   } catch (error) {
     console.error("Verify OTP Error:", error);
     res.status(500).json({ message: "OTP verification failed.", error });
-  }
-});
-
-// **Admin Verification Route (PATCH)**
-router.patch("/admin-verify/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const visitor = await Visitor.findById(id);
-    if (!visitor) {
-      return res.status(404).json({ message: "Visitor not found." });
-    }
-
-    visitor.isVerified = true;
-    await visitor.save();
-
-    res.status(200).json({
-      message: "Visitor successfully verified by admin.",
-      visitor,
-    });
-  } catch (error) {
-    console.error("Admin Verification Error:", error);
-    res.status(500).json({ message: "Admin verification failed.", error });
   }
 });
 
