@@ -1,0 +1,576 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(90deg, #a551ff, #d1e2ff); /* Gradient background */
+}
+
+.portal-container {
+    background: rgba(255, 255, 255, 0.1); /* Translucent background */
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    width: 600px;
+    max-width: 90%; /* Added max-width for mobile responsiveness */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.portal-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.portal-header h1 {
+    font-size: 2.6em;
+    margin-bottom: 10px;
+    font-weight: bold; /* Make header text bold */
+}
+
+.portal-header p {
+    font-size: 1.3em;
+    opacity: 0.8;
+    font-weight: bold; /* Make the description bold */
+}
+
+.portal-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.portal-form .form-group {
+    margin-bottom: 20px;
+    width: 100%; /* Ensure form fields take the full width of the container */
+}
+
+.portal-form .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold; /* Make label text bold */
+    text-align: left;  /* Align labels to the left */
+    margin-left: 20px; /* Add space from the left edge */
+}
+
+.portal-form .form-group input[type="text"],
+.portal-form .form-group input[type="email"],
+.portal-form .form-group input[type="tel"],
+.portal-form .form-group input[type="password"],
+.portal-form .form-group input[type="date"],
+.portal-form .form-group select,
+.portal-form .form-group input[type="file"] {
+    width: 80%;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #000;
+    font-size: 1em; /* Improved readability */
+    transition: border-color 0.3s ease;
+    margin-left: 20px; /* Align inputs to the left */
+}
+
+.portal-form .form-group input[type="text"]:focus,
+.portal-form .form-group input[type="email"]:focus,
+.portal-form .form-group input[type="tel"]:focus,
+.portal-form .form-group input[type="password"]:focus,
+.portal-form .form-group input[type="date"]:focus,
+.portal-form .form-group select:focus,
+.portal-form .form-group input[type="file"]:focus {
+    border-color: #2575fc; /* Focus effect */
+    outline: none;
+}
+
+.portal-button {
+    width: 80%;
+    padding: 12px;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold; /* Make the button text bold */
+    transition: background 0.3s ease;
+    text-align: center;
+}
+
+.portal-button:hover {
+    background: linear-gradient(to right, #2575fc, #6a11cb);
+}
+
+.signup-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.signup-link p {
+    font-size: 1.1em;
+    font-weight: bold; /* Make the "Do not have an account?" text bold */
+}
+
+.signup-link .link {
+    color: #2575fc;
+    text-decoration: none;
+    font-weight: bold; /* Make the Sign Up link bold */
+}
+
+.signup-link .link:hover {
+    text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+    .portal-container {
+        width: 90%;
+        padding: 20px;
+    }
+
+    .portal-form .form-group input[type="text"],
+    .portal-form .form-group input[type="email"],
+    .portal-form .form-group input[type="tel"],
+    .portal-form .form-group input[type="password"],
+    .portal-form .form-group input[type="date"],
+    .portal-form .form-group select,
+    .portal-form .form-group input[type="file"],
+    .portal-button {
+        width: 90%;
+    }
+}
+
+.error-message {
+    color: #ff4d4d;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.success-message {
+    color: #52c41a;
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+
+
+
+
+/* frontend/src/components/VisitorList.css */
+
+/* Overall page styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5; /* Light gray background for the page */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    min-height: 100vh; /* Ensure the body takes at least the full viewport height */
+    box-sizing: border-box;
+}
+
+.visitor-list-container {
+    background-color: #fff; /* White background for the container */
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 80%; /* Adjust width as needed */
+    max-width: 1200px; /* Maximum width of the container */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the title and table within the container */
+}
+
+h2 {
+    color: black;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 2.5em;
+    font-weight: 700;
+    margin-left: 40px;
+}
+
+.portal-button{
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 500px;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    width: 80%; /* Adjust width as needed */
+}
+
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    width: 80%; /* Adjust width as needed */
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    width: 100%;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    font-size: 1.2em;
+    color: #555;
+    font-weight: bold;
+}
+
+.table-wrapper {
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    overflow-x: auto;
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.visitor-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
+}
+
+.table-header-row {
+    background-color: #6d3664; /* Blue header */
+    color: white;
+}
+
+.visitor-table th,
+.visitor-table td {
+    padding: 20px 60px;
+    text-align: left;
+    border-bottom: 2px solid #5c59ab;
+    font-weight: 500;
+    
+}
+
+.visitor-table th {
+    font-weight: 700;
+    white-space: nowrap;
+    font-size: 20px;
+}
+
+.visitor-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.visitor-table tbody tr:hover {
+    background-color: #e3f2fd;
+    transition: background-color 0.3s ease;
+}
+
+.no-data-message {
+    color: #777;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.actions-column {
+    text-align: center; /* Center the action buttons */
+    white-space: nowrap; /* Prevent buttons from wrapping */
+}
+
+.action-button {
+    padding: 8px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.edit-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.delete-button {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+.profile-button {
+    background-color: #008CBA; /* Blue */
+    color: white;
+}
+
+.action-button:hover {
+    opacity: 0.8;
+}
+
+
+/* Styling for the visitor photo (as a download button) */
+.photo-column {
+    text-align: center;
+}
+
+.download-button {
+    padding: 8px 12px;
+    border: 1px solid #007bff;
+    background-color: #fff;
+    color: #007bff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.download-button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Styling for the action buttons column */
+.actions-column {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.action-button {
+    padding: 8px 12px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.edit-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+}
+
+.delete-button {
+    background-color: #f44336; /* Red */
+    color: white;
+}
+
+.profile-button {
+    background-color: #008CBA; /* Blue */
+    color: white;
+}
+
+.action-button:hover {
+    opacity: 0.8;
+}
+
+
+
+.actions-column a {
+    display: inline-block;
+    padding: 8px 12px;
+    margin-right: 5px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-size: 0.9em;
+}
+
+.actions-column a.edit-button {
+    background-color: #4CAF50; /* Green */
+}
+
+.actions-column a.delete-button {
+    background-color: #f44336; /* Red */
+}
+
+.actions-column a.profile-button {
+    background-color: #008CBA; /* Blue */
+}
+
+.actions-column a:hover {
+    opacity: 0.8;
+}
+
+.report-button{
+    margin-top: 100px;
+    margin-left: 50px;
+    font-weight: bold;
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* frontend/src/components/DeleteVisitorModal.css */
+
+.delete-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.delete-modal-content {
+    background-color: #fff; /* White background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px; /* Basic padding */
+    text-align: left; /* Left align text */
+    width: 80%;
+    max-width: 400px;
+}
+
+.delete-modal-content h2 {
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #007bff; /* Blue underline */
+    padding-bottom: 5px;
+    font-size: 1.5em;
+    margin-left: 5px;
+}
+
+.delete-modal-content p {
+    margin-bottom: 10px;
+    color: #555;
+    font-size: 2em;
+}
+
+.delete-modal-content strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.delete-modal-content .delete-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.delete-modal-content .delete-actions button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.delete-modal-content .confirm-delete {
+    background-color: #6a11cb;
+    color: white;
+}
+
+.delete-modal-content .cancel-delete {
+    background-color: #6c757d;
+    color: white;
+}
+
+
+/* frontend/src/components/VisitorProfile.css */
+.profile-container {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    width: 100%;
+    max-width: 20cm;
+}
+
+h2 {
+    color: #444a4f; /* Blue color for the title */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    width: 100%;
+    text-align: left;
+}
+
+p {
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+strong {
+    font-weight: bold;
+    color: #343a40;
+}
+
+h3 {
+    color: #28a745; /* Green color for photo section */
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    background-color: #0056b3;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color:   #5177a0;
+}
