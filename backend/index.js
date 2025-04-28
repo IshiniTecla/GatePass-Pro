@@ -10,6 +10,7 @@ import notificationRoutes from "./routes/notificationRoutes.js";
 import statisticsRoutes from "./routes/statisticsRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import visitorRoutes from "./routes/visitorRoutes.js";
+import facePhotoRoutes from "./routes/facePhotoRoutes.js";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use("/api/appointments", appointmentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/statistics", statisticsRoutes);
 app.use("/api/host", hostRoutes);
+app.use("/api", facePhotoRoutes);
 
 // MongoDB connection
 mongoose

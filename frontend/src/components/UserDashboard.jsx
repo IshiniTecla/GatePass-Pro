@@ -148,7 +148,6 @@ const UserDashboard = () => {
     { name: "QR Scanner", icon: <QrCode size={20} /> },
     { name: "My Visitation", icon: <Users size={20} /> },
     { name: "Become a Host", icon: <Home size={20} /> },
-    { name: "Feedback", icon: <MessageCircle size={20} /> },
     { name: "Notifications", icon: <Bell size={20} /> },
     { name: "Logout", icon: <LogOut size={20} /> },
   ];
@@ -327,6 +326,12 @@ const UserDashboard = () => {
                     <div className="dropdown-item">
                       <HelpCircle size={16} />
                       <span>Support</span>
+                    </div>
+                    <div
+                      className="dropdown-item"
+                      onClick={() => setActiveMenu("Feedback")}>
+                      <MessageCircle size={16} />
+                      <span>Feedback</span>
                     </div>
                     <div className="dropdown-item logout" onClick={handleLogout}>
                       <LogOut size={16} />

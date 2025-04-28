@@ -1,12 +1,16 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as blazeface from "@tensorflow-models/blazeface";
-import axios from "axios"; // Assuming axios is used for API requests
+import axios from "axios";
 
 const FaceRecognition = () => {
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isFaceDetected, setIsFaceDetected] = useState(false);
+    const [faceUnlockEnabled, setFaceUnlockEnabled] = useState(false);
+    const [showFaceSetup, setShowFaceSetup] = useState(false);
+    const [faceCapturing, setFaceCapturing] = useState(false);
+    const [faceSetupStep, setFaceSetupStep] = useState(1);
 
     useEffect(() => {
         const loadModelAndDetectFaces = async () => {
@@ -69,7 +73,7 @@ const FaceRecognition = () => {
     const handleCheckInOut = async () => {
         if (!videoRef.current) return;
 
-        const checkInTime = new Date().toISOString(); // ISO format for consistency
+        const checkInTime = new Date().toISOString();
         const canvas = canvasRef.current;
         const photo = canvas.toDataURL("image/jpeg");
 
@@ -87,6 +91,31 @@ const FaceRecognition = () => {
             console.error("Check-In Error:", error);
             alert("Check-In failed. " + (error.response?.data?.message || error.message));
         }
+    };
+
+    const toggleFaceUnlock = () => {
+        setFaceUnlockEnabled((prev) => !prev);
+        if (!faceUnlockEnabled) {
+            setShowFaceSetup(true);
+        }
+    };
+
+    const startFaceCapture = () => {
+        setFaceCapturing(true);
+        setTimeout(() => {
+            setFaceCapturing(false);
+            setFaceSetupStep(2); // Move to setup completion step
+        }, 3000); // Simulate the face capture for 3 seconds
+    };
+
+    const cancelFaceSetup = () => {
+        setShowFaceSetup(false);
+        setFaceSetupStep(1);
+    };
+
+    const completeFaceSetup = () => {
+        setShowFaceSetup(false);
+        alert("Face ID Setup Complete");
     };
 
     // Inline styles
@@ -118,6 +147,39 @@ const FaceRecognition = () => {
             display: "block",
             margin: "auto",
         },
+        settingsCard: {
+            marginTop: "30px",
+            padding: "15px",
+            border: "1px solid #ccc",
+            borderRadius: "10px",
+        },
+        faceSetupPanel: {
+            marginTop: "20px",
+            padding: "20px",
+            border: "1px solid #ddd",
+            borderRadius: "8px",
+            backgroundColor: "#f9f9f9",
+        },
+        faceCameraPlaceholder: {
+            margin: "20px 0",
+        },
+        cancelButton: {
+            marginRight: "10px",
+            padding: "10px 20px",
+            backgroundColor: "#f44336",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+        },
+        captureButton: {
+            padding: "10px 20px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+        },
     };
 
     return (
@@ -137,6 +199,71 @@ const FaceRecognition = () => {
             >
                 Check In / Check Out
             </button>
+
+            {/* New Face Unlock Section */}
+            <div style={styles.settingsCard}>
+                <div>
+                    <h2>Face Unlock</h2>
+                    <p>Enable Face ID to securely sign in to your account without a password.</p>
+                    <button
+                        onClick={toggleFaceUnlock}
+                        style={{
+                            backgroundColor: faceUnlockEnabled ? "#ff5722" : "#4CAF50",
+                            color: "white",
+                            padding: "10px 20px",
+                            borderRadius: "5px",
+                        }}
+                    >
+                        {faceUnlockEnabled ? "Disable Face Unlock" : "Enable Face Unlock"}
+                    </button>
+                </div>
+
+                {showFaceSetup && (
+                    <div style={styles.faceSetupPanel}>
+                        {faceSetupStep === 1 && (
+                            <div>
+                                <h3>Face ID Setup</h3>
+                                <div style={styles.faceCameraPlaceholder}>
+                                    {faceCapturing ? (
+                                        <div>Scanning face...</div>
+                                    ) : (
+                                        <div style={{ fontSize: "64px" }}>📸</div> // Replacing Camera icon with text
+                                    )}
+                                </div>
+                                <p>Position your face in the frame and click "Capture" to scan your face.</p>
+                                <div>
+                                    <button
+                                        onClick={cancelFaceSetup}
+                                        style={styles.cancelButton}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={startFaceCapture}
+                                        style={styles.captureButton}
+                                        disabled={faceCapturing}
+                                    >
+                                        {faceCapturing ? "Capturing..." : "Capture"}
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+
+                        {faceSetupStep === 2 && (
+                            <div>
+                                <h3>Face ID Captured</h3>
+                                <p>Your face has been successfully captured</p>
+                                <button
+                                    onClick={completeFaceSetup}
+                                    style={styles.captureButton}
+                                >
+                                    Complete Setup
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
