@@ -134,17 +134,14 @@ const ManualCheckIn = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const token = localStorage.getItem("token"); // Assuming you stored token after login
-
+                const token = localStorage.getItem("token");
                 const response = await axios.get("http://localhost:5000/api/users/me", {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
                 const user = response.data;
-
-                setVisitorName(`${user.firstName} ${user.lastName}`); // Combine first and last name
+                setVisitorName(`${user.firstName} ${user.lastName}`);
                 setEmail(user.email);
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
