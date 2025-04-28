@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Form, Button, Container, Spinner } from "react-bootstrap";
 import { useSnackbar } from 'notistack';
@@ -130,6 +130,29 @@ const ManualCheckIn = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const token = localStorage.getItem("token"); // Assuming you stored token after login
+
+                const response = await axios.get("http://localhost:5000/api/users/me", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const user = response.data;
+
+                setVisitorName(`${user.firstName} ${user.lastName}`); // Combine first and last name
+                setEmail(user.email);
+            } catch (error) {
+                console.error("Failed to fetch user data:", error);
+            }
+        };
+
+        fetchUserData();
+    }, []);
 
 
     return (

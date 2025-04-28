@@ -386,6 +386,23 @@ const HomePage = () => {
             margin: "0 auto",
             justifyContent: "center",
         },
+        checkinCheckoutContainer: {
+            background: "white",
+            borderRadius: "16px",
+            boxShadow: "0 10px 15px rgba(0, 0, 0, 0.1)",
+            padding: "32px 40px",
+            textAlign: "center",
+            marginBottom: "24px",
+        },
+
+        sectionDescription: {
+            fontSize: "16px",
+            color: "#64748b",
+            marginBottom: "32px",
+            maxWidth: "600px",
+            margin: "0 auto 32px auto",
+        },
+
     };
 
     // Determine if we're on mobile (simple approach for the example)
@@ -494,6 +511,25 @@ const HomePage = () => {
                     </a>
                 </div>
             </div>
+            {/*Checkin/out section*/}
+            <div id="checkin-checkout" style={styles.section}>
+                <h2 style={styles.sectionTitle}>Visitor Check-In / Check-Out</h2>
+                <p style={styles.sectionDescription}>
+                    Manage your visitor status easily. Click on either of the options below to
+                    proceed with your check-in or check-out process.
+                </p>
+
+                <div style={styles.buttonContainer}>
+                    <a href="/dashboard" style={styles.primaryButton}>
+                        Check-In
+                    </a>
+
+                    <a href="/checkout" style={styles.secondaryButton}>
+                        Check-Out
+                    </a>
+                </div>
+            </div>
+
 
             {/* Features Section */}
             <div id="features" style={styles.section}>
