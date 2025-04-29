@@ -14,7 +14,7 @@ const AppointmentForm = () => {
     email: "",
     date: "",
     time: "",
-    
+    reason: "",
   });
 
   const [loading, setLoading] = useState(false);
