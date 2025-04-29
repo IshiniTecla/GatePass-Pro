@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
+
 function DeleteVisitor() {
     const [visitorName, setVisitorName] = useState('');
     const [loading, setLoading] = useState(true);
@@ -72,12 +73,14 @@ function DeleteVisitor() {
         );
     }
 
+    //success message
+
     if (success) {
         return (
             <div className="success-message">
                 <p>
                     Visitor {visitorName} has been deleted successfully.
-                </p>
+                </p>                                                                     
             </div>
         );
     }
