@@ -36,7 +36,7 @@ function ViewAppointment() {
                             <p><strong>Email:</strong> {appt.email || "No email provided"}</p>
                             <p><strong>Date:</strong> {appt.date}</p>
                             <p><strong>Time:</strong> {appt.time}</p>
-                            <p><strong>Reason:</strong> {appt.reason}</p>
+                            
                             <p className={`status ${appt.status.toLowerCase()}`}>
                                 <strong>Status:</strong> {appt.status}
                             </p>
