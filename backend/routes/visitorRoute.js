@@ -93,7 +93,6 @@ router.put('/:id', async (req, res) => {
 
 
 
-
 // Route for delete visitor
 router.delete('/:id', async (request, response) => {
     try {
@@ -110,8 +109,6 @@ router.delete('/:id', async (request, response) => {
         return response.status(500).send({ message: error.message });
     }
 });
-
-
 
 
 // Route for get all visitors
@@ -133,8 +130,6 @@ router.get('/', async (request, response) => {
         response.status(500).send({ message: error.message });
     }
 });
-
-
 
 
 
