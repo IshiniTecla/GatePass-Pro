@@ -1,4 +1,3 @@
-// frontend/src/components/VisitorProfile.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -18,7 +17,7 @@ function VisitorProfile() {
                 setVisitor(response.data);
                 setLoading(false);
             } catch (err) {
-                console.error('Error fetching visitor profile:', err);
+                console.error('Error fetching visitor profile:', err);  //error message
                 setError('Failed to load visitor profile.');
                 setLoading(false);
             }
@@ -38,6 +37,8 @@ function VisitorProfile() {
     if (!visitor) {
         return <div className="profile-container"><p>Visitor not found.</p></div>;
     }
+
+
 
     return (
         <div className="profile-container">
@@ -61,5 +62,6 @@ function VisitorProfile() {
         </div>
     );
 }
+
 
 export default VisitorProfile;
