@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import apiClient from "../utils/apiClient";
 
-const useUserData = () => {
+const useUserData = (token = null) => {
   const [userData, setUserData] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,16 +26,20 @@ const useUserData = () => {
     }
   };
 
-  // Configure apiClient for CORS
+  // Configure apiClient for CORS with proper authorization
   const configuredApiClient = {
     get: async (url, config = {}) => {
       try {
+        // Use the token parameter or fall back to localStorage
+        const authToken = token || localStorage.getItem("token");
+        
         return await apiClient.get(url, {
           ...config,
           withCredentials: true, // Send cookies with cross-origin requests
           headers: {
             ...config.headers,
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`, // Add authorization header
           },
         });
       } catch (error) {
@@ -51,12 +55,16 @@ const useUserData = () => {
     },
     put: async (url, data, config = {}) => {
       try {
+        // Use the token parameter or fall back to localStorage
+        const authToken = token || localStorage.getItem("token");
+        
         return await apiClient.put(url, data, {
           ...config,
           withCredentials: true,
           headers: {
             ...config.headers,
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`, // Add authorization header
           },
         });
       } catch (error) {
@@ -71,10 +79,19 @@ const useUserData = () => {
     },
   };
 
-  // Refresh user data and notifications
-  const refreshData = useCallback(async () => {
+  // Refresh user data and notifications with token parameter
+  const refreshData = useCallback(async (refreshToken = null) => {
     setLoading(true);
     setError(null);
+    
+    // Use the provided refresh token, or fall back to the hook's token or localStorage
+    const authToken = refreshToken || token || localStorage.getItem("token");
+    
+    if (!authToken) {
+      setError("No authentication token found");
+      setLoading(false);
+      return;
+    }
 
     try {
       // First try to get user data
@@ -114,11 +131,13 @@ const useUserData = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [token]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    // Use the token parameter or fall back to localStorage
+    const authToken = token || localStorage.getItem("token");
+    
+    if (!authToken) {
       setError("No authentication token found");
       setLoading(false);
       return;
@@ -246,7 +265,7 @@ const useUserData = () => {
       isMounted = false;
       if (interval) clearInterval(interval);
     };
-  }, []); // Empty dependency array means this runs once on mount
+  }, [token]); // Add token to dependency array
 
   // Function to mark notification as read (with endpoint availability check)
   const markNotificationAsRead = async (notificationId) => {

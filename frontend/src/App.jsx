@@ -21,7 +21,6 @@ import HostRegistrationFlow from "./components/hosts/HostRegistrationFlow";
 import TokenRefreshHandler from "./components/TokenRefreshHandler";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LogoutHandler from "./components/LogoutHandler";
-//import AppointmentForm from "./components/appointment/AppointmentForm";
 
 function App() {
   const userService = new UserService();
@@ -41,31 +40,28 @@ function App() {
         {/* <div style={{ padding: "10px", background: "#eee", fontSize: "12px" }}>
           Current Path: {window.location.pathname}
         </div> */}
-        
+
         <Routes>
           {/* Home route */}
           <Route path="/" element={<Home />} />
-          
+
           {/* User authentication routes */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          
+
           {/* Specific host routes */}
           <Route path="/host-login" element={<HostLogin />} />
           <Route path="/become-host" element={<HostRegistrationFlow />} />
           <Route path="/host/register" element={<HostRegistrationFlow />} />
-          {/*<Route path="/appointment/:hostId" element={<AppointmentForm/>}/>*/}
-
-
 
           {/* Logout routes */}
-          <Route 
-            path="/logout" 
-            element={<LogoutHandler redirectTo="/login" />} 
+          <Route
+            path="/logout"
+            element={<LogoutHandler redirectTo="/login" />}
           />
-          <Route 
-            path="/host-logout" 
-            element={<LogoutHandler redirectTo="/host-login" />} 
+          <Route
+            path="/host-logout"
+            element={<LogoutHandler redirectTo="/host-login" />}
           />
 
           {/* Protected user routes */}
@@ -88,11 +84,10 @@ function App() {
             }
           />
 
-
           {/* Other public routes */}
           <Route path="/experts" element={<ExpertsPage />} />
           <Route path="/about" element={<AboutUsPage />} />
-          
+
           {/* Protected user profile */}
           <Route
             path="/profile"
