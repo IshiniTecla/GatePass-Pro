@@ -1,4 +1,3 @@
-// backend/models/visitorModel.js
 import mongoose from "mongoose";
 
 const visitorSchema = new mongoose.Schema(
@@ -24,7 +23,7 @@ const visitorSchema = new mongoose.Schema(
         },
         contactNo: {
             type: Number,
-            required: true,
+            required: true,       //contact number should be a number
         },
         hostName: {
             type: String,
