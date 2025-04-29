@@ -1,23 +1,21 @@
 import express from "express";
 import * as userController from "../controllers/userController.js";
-import { verifyToken } from "../middleware/userMiddleware.js";
+import { verifyUserToken, auth } from "../middleware/userMiddleware.js";
 
 const router = express.Router();
 
-// Public routes - no authentication required
-router.post("/register", userController.registerUser); // Register new user
-router.post("/login", userController.loginUser); // Login user
+// Public routes - no auth required
+router.post("/register", userController.registerUser);
+router.post("/login", userController.loginUser);
 
-// Protected routes - authentication required
-router.get("/me", verifyToken, userController.getCurrentUser); // Get current user profile
-router.put("/me", verifyToken, userController.updateProfile); // Update user profile
-router.put("/password", verifyToken, userController.updatePassword); // Update password
-router.delete("/me", verifyToken, userController.deleteAccount); // Delete user account
+// Protected routes - auth required
+router.get("/me", verifyUserToken, userController.getCurrentUser);
+router.put("/me", verifyUserToken, userController.updateProfile);
+router.put("/password", verifyUserToken, userController.updatePassword);
+router.delete("/me", verifyUserToken, userController.deleteAccount);
+router.get("/profile", verifyUserToken, userController.getprofile);
 
-// Fetch user profile by email, protected with token
-router.get("/profile", verifyToken, userController.getprofile); // Make sure `getProfile` is defined correctly in your controller
-
-// Refresh token route
-router.post("/refresh", userController.refreshToken); // Refresh access token
+// Add this route to your existing auth routes
+router.post("/refresh", userController.refreshToken);
 
 export default router;

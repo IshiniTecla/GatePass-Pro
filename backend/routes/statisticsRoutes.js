@@ -1,13 +1,14 @@
-// statisticsRoutes.js
-
 import express from 'express';
-import { getVisitorStatistics, getDashboardStats } from '../controllers/statisticsController.js';
+import * as statisticsController from '../controllers/statisticsController.js';
 import { auth } from '../middleware/userMiddleware.js';
 
 const router = express.Router();
 
-// Routes for statistics that require authentication
-router.get('/visitors', auth, getVisitorStatistics);
-router.get('/dashboard', auth, getDashboardStats);
+// Use the auth middleware for the routes
+router.get('/visitors', auth, statisticsController.getVisitorStatistics);
+
+// Add any other statistics routes with the auth middleware
+// router.get('/dashboard', auth, statisticsController.getDashboardStats);
+// router.get('/other-stats', auth, statisticsController.getOtherStats);
 
 export default router;

@@ -1,8 +1,9 @@
 import jwt from "jsonwebtoken";
-import { config } from "../config/default.js"; 
+import { config } from "../config/default.js";  // Named import
+import User from "../models/User.js";
 
 // User authentication middleware
-export const verifyUserToken = function (req, res, next) {
+const verifyUserToken = (req, res, next) => {
   const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
   if (!token) {
@@ -30,7 +31,7 @@ export const verifyUserToken = function (req, res, next) {
 };
 
 // Host authentication middleware
-export const verifyHostToken = function (req, res, next) {
+const verifyHostToken = (req, res, next) => {
   const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
   if (!token) {
@@ -57,20 +58,20 @@ export const verifyHostToken = function (req, res, next) {
   }
 };
 
-// Generic token verification (works for both user and host)
-export const auth = (req, res, next) => {
-  const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "No token, authorization denied" });
-  }
-
+// Generic token verification (can be either user or host)
+const auth = (req, res, next) => {
   try {
+    const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ message: "No token, authorization denied" });
+    }
+
     const decoded = jwt.verify(token, config.jwtSecret);
 
     req.user = {
       id: decoded.id || decoded.userId,
-      isHost: decoded.isHost || false,
+      isHost: decoded.isHost || false
     };
 
     next();
@@ -86,4 +87,11 @@ export const auth = (req, res, next) => {
 };
 
 // Add a verifyToken alias for backward compatibility
-export { auth as verifyToken };
+const verifyToken = auth;
+
+export {
+  verifyUserToken,
+  verifyHostToken,
+  auth,
+  verifyToken
+};

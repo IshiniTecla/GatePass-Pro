@@ -1,110 +1,139 @@
-import multer from "multer";
-import path from "path";
-import { fileURLToPath } from "url";
-import fs from "fs";
-import express from "express";
-// Import controllers
-import {
-  createHostProfile,
-  getHostProfile,
-  getAvailableHosts,
-  updateHostProfile,
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import fs from 'fs';
+import path from 'path';
+import { 
+  loginHost, 
+  createHostProfile, 
+  getHostProfile, 
+  getAvailableHosts, 
+  updateHostProfile, 
   getHostById,
-} from "../controllers/hostController.js";
+  getHostDetails,
+  updateHostActiveStatus
+} from '../controllers/hostController.js';
+import { auth } from '../middleware/userMiddleware.js';
+import upload from '../middleware/uploadMiddleware.js';
+import Host from '../models/Host.js';
+import User from '../models/User.js';
 
-// JWT Secret from config
-import { config } from "../config/default.js";
-import jwt from "jsonwebtoken";
+// Initialize express router
+const router = express.Router();
 
-// Initialize express Router
-const router = express.Router(); // Initialize router here
-
-// Ensure uploads directory exists
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const uploadsDir = path.join(__dirname, "../public/uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-// Setup multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
-});
-
-// Set up upload limits and file filter
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
-  fileFilter: function (req, file, cb) {
-    if (!file.mimetype.startsWith("image/")) {
-      return cb(new Error("Only image files are allowed!"), false);
-    }
-    cb(null, true);
-  },
-});
-
-// Authentication middleware
-const auth = (req, res, next) => {
+// Validate host token endpoint
+router.post("/validate-token", async (req, res) => {
   try {
-    const token =
-      req.headers.authorization && req.headers.authorization.split(" ")[1];
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "No token, authorization denied" });
+    // Get the token from the Authorization header
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ valid: false, message: "No token provided" });
     }
-    const decoded = jwt.verify(token, config.jwtSecret);
-    req.user = { id: decoded.id || decoded.userId }; // Compatibility for both formats
-    next();
+    
+    const token = authHeader.split(" ")[1];
+    
+    // Verify the token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || require('../config/default').jwtSecret);
+    
+    // Check if token belongs to a host
+    if (!decoded.isHost) {
+      return res.status(403).json({ 
+        valid: false, 
+        role: "user", 
+        message: "Token is valid but not for a host" 
+      });
+    }
+    
+    // Check if host still exists in database
+    const host = await Host.findOne({ user: decoded.id });
+    if (!host) {
+      return res.status(404).json({ 
+        valid: false, 
+        message: "Host account not found" 
+      });
+    }
+    
+    // Return successful validation
+    return res.status(200).json({
+      valid: true,
+      role: "host",
+      hostId: host.hostID,
+      name: host.name
+    });
   } catch (error) {
-    console.error("Auth middleware error:", error);
+    // Handle expired or invalid tokens
     if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token has expired" });
+      return res.status(401).json({ 
+        valid: false, 
+        message: "Token expired" 
+      });
     }
-    return res
-      .status(401)
-      .json({ message: "Authentication failed", error: error.message });
-  }
-};
-
-// Error handling middleware for multer
-const handleMulterError = (err, req, res, next) => {
-  if (err instanceof multer.MulterError) {
-    if (err.code === "LIMIT_FILE_SIZE") {
-      return res.status(400).json({ message: "File size exceeds 5MB limit" });
+    
+    if (error.name === "JsonWebTokenError") {
+      return res.status(401).json({ 
+        valid: false, 
+        message: "Invalid token" 
+      });
     }
-    return res.status(400).json({ message: `Upload error: ${err.message}` });
-  } else if (err) {
-    return res.status(400).json({ message: err.message });
+    
+    // Handle other errors
+    console.error("Token validation error:", error);
+    return res.status(500).json({ 
+      valid: false, 
+      message: "Server error during validation" 
+    });
   }
-  next();
-};
+});
 
-// Routes
-router.post(
-  "/create",
-  auth,
-  upload.single("avatar"),
-  handleMulterError,
-  createHostProfile
-);
-router.get("/me", auth, getHostProfile);
-router.get("/available", getAvailableHosts);
-router.get("/:hostId", getHostById);
-router.put(
-  "/update",
-  auth,
-  upload.single("avatar"),
-  handleMulterError,
-  updateHostProfile
-);
+// Host authentication routes
+router.post('/login', loginHost);
+router.post('/loginHost', loginHost);
 
-// Export the router
+// Host profile routes
+router.post('/create-profile', auth, upload.single('avatar'), createHostProfile);
+router.get('/profile', auth, getHostProfile);
+router.get('/getHostDetails', auth, getHostDetails);
+router.get('/available', getAvailableHosts);
+router.put('/update-profile', auth, upload.single('avatar'), updateHostProfile);
+
+// Add delete profile endpoint
+router.delete('/delete-profile', auth, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Find the host by user ID
+    const host = await Host.findOne({ user: userId });
+    
+    if (!host) {
+      return res.status(404).json({ message: "Host profile not found" });
+    }
+    
+    // Delete host profile
+    await Host.findOneAndDelete({ user: userId });
+    
+    // Update user to remove host status
+    await User.findByIdAndUpdate(userId, {
+      isHost: false,
+      hostId: null
+    });
+    
+    // Delete avatar file if exists
+    if (host.avatar) {
+      const avatarPath = path.join(__dirname, "..", "public", host.avatar);
+      if (fs.existsSync(avatarPath)) {
+        fs.unlinkSync(avatarPath);
+      }
+    }
+    
+    res.status(200).json({ message: "Host profile deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting host profile:", error);
+    res.status(500).json({ message: "Server error during profile deletion" });
+  }
+});
+
+router.get('/:hostId', getHostById);
+
+// Update host active status
+router.put('/update-status', auth, updateHostActiveStatus);
+
 export default router;

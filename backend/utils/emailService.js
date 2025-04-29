@@ -2,7 +2,8 @@ import nodemailer from "nodemailer";
 import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
-import { config } from "../config/default.js"; // Updated import
+import { config } from "../config/default.js";  // Named import
+
 
 // Create a transport object using your email service credentials
 const transporter = nodemailer.createTransport({
