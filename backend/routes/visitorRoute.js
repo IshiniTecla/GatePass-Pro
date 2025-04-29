@@ -101,10 +101,10 @@ router.delete('/:id', async (request, response) => {
         const deletedVisitor = await Visitor.findByIdAndDelete(id);
 
         if (!deletedVisitor) {
-            return response.status(404).json({ message: "Visitor not found" });
+            return response.status(404).json({ message: "Visitor not found" });    //error message
         }
 
-        return response.status(200).json({ message: "Visitor deleted successfully" });
+        return response.status(200).json({ message: "Visitor deleted successfully" });    //successfull message
     } catch (error) {
         console.error(error.message);
         return response.status(500).send({ message: error.message });
