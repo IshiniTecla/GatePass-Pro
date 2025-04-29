@@ -58,7 +58,7 @@ router.put('/:id', async (req, res) => {
         const { name, nic, email, password, contactNo, hostName } = req.body;
 
         if (!name || !nic || !email || !contactNo) {
-            return res.status(400).send({ message: "Missing required fields" });
+            return res.status(400).send({ message: "Missing required fields" });   //validations
         }
 
         const updateData = {
