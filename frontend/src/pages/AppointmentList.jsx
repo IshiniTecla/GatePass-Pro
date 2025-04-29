@@ -1,3 +1,4 @@
+// AppointmentList.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -5,7 +6,7 @@ import "./AppointmentList.css";
 
 function AppointmentList({ isHost }) {
   const [appointments, setAppointments] = useState([]);
-  const [confirmDelete, setConfirmDelete] = useState(null); // Store appointment ID for confirmation
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +33,7 @@ function AppointmentList({ isHost }) {
     try {
       await axios.delete(`http://localhost:5000/api/appointments/${id}`);
       setAppointments(appointments.filter((appt) => appt._id !== id));
-      setConfirmDelete(null); // Close confirmation modal
+      setConfirmDelete(null);
     } catch (error) {
       console.error("Error deleting appointment:", error);
     }
@@ -42,11 +43,10 @@ function AppointmentList({ isHost }) {
     navigate(`/edit-Appointment/${id}`);
   };
 
-  // Handle PDF download
   const handleDownloadPDF = async (id) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/appointments/generate-pdf/${id}`, {
-        responseType: 'blob', // Expect a PDF file
+        responseType: 'blob',
       });
       const file = new Blob([response.data], { type: 'application/pdf' });
       const fileURL = URL.createObjectURL(file);
@@ -65,15 +65,11 @@ function AppointmentList({ isHost }) {
       <div className="appointments-grid">
         {appointments.map((appt) => (
           <div key={appt._id} className="card">
-            <p>
-              <strong>Date:</strong> {appt.date || "N/A"}
-            </p>
-            <p>
-              <strong>Time:</strong> {appt.time || "N/A"}
-            </p>
-            <p>
-              <strong>Reason:</strong> {appt.reason || "Not Provided"}
-            </p>
+            <p><strong>Date:</strong> {appt.date || "N/A"}</p>
+            <p><strong>Time:</strong> {appt.time || "N/A"}</p>
+            <p><strong>Name:</strong> {appt.name || "N/A"}</p>
+            <p><strong>Email:</strong> {appt.email || "N/A"}</p>
+            <p><strong>Reason:</strong> {appt.reason || "Not Provided"}</p>
             <p className={`status ${appt.status.toLowerCase()}`}>
               <strong>Status:</strong> {appt.status}
             </p>
@@ -109,8 +105,6 @@ function AppointmentList({ isHost }) {
                 >
                   Delete
                 </button>
-
-                {/* Button to download PDF after approval */}
                 {appt.status === 'Approved' && (
                   <button
                     className="download-pdf"
@@ -125,7 +119,6 @@ function AppointmentList({ isHost }) {
         ))}
       </div>
 
-      {/* Delete Confirmation Overlay */}
       {confirmDelete && (
         <div className="confirmation-overlay">
           <div className="confirmation-box">

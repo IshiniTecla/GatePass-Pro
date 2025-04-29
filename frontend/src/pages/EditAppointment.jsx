@@ -1,3 +1,4 @@
+// EditAppointment.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -8,6 +9,7 @@ function EditAppointment() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
+        email: '',
         date: '',
         time: '',
         reason: ''
@@ -29,10 +31,10 @@ function EditAppointment() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError(null); // Reset any previous error messages
+        setError(null);
         try {
             await axios.put(`http://localhost:5000/api/appointments/${id}`, formData);
-            navigate('/appointment-list'); // Redirect to dashboard after update
+            navigate('/appointment-list');
         } catch (error) {
             console.error('Error updating appointment:', error);
             setError('Failed to update the appointment. Please try again.');
@@ -50,6 +52,14 @@ function EditAppointment() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your name"
+                    required
+                />
+                <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
                     required
                 />
                 <input

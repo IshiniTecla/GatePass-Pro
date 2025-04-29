@@ -6,14 +6,14 @@ const router = express.Router();
 // Create Appointment
 router.post("/", async (req, res) => {
   try {
-    const { name, date, time, reason } = req.body;
+    const { name, email, date, time, reason } = req.body;
 
     // Validate required fields
-    if (!name || !date || !time || !reason) {
+    if (!name || !email || !date || !time || !reason) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    const appointment = new Appointment({ name, date, time, reason });
+    const appointment = new Appointment({ name, email, date, time, reason });
     await appointment.save();
 
     res.status(201).json({
@@ -65,20 +65,42 @@ router.get("/user/:name", async (req, res) => {
   }
 });
 
-// Update Appointment (name, date, time, reason)
+// Get Appointments by User Email (NEW)
+router.get("/user/email/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    const appointments = await Appointment.find({ email });
+
+    if (appointments.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No appointments found for this email." });
+    }
+
+    res.json(appointments);
+  } catch (error) {
+    console.error("Error fetching user appointments by email:", error);
+    res.status(500).json({
+      message: "Error fetching user appointments by email.",
+      error: error.message,
+    });
+  }
+});
+
+// Update Appointment (name, email, date, time, reason)
 router.put("/:id", async (req, res) => {
   try {
-    const { name, date, time, reason } = req.body;
+    const { name, email, date, time, reason } = req.body;
 
     // Validate required fields
-    if (!name || !date || !time || !reason) {
+    if (!name || !email || !date || !time || !reason) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
     const appointment = await Appointment.findByIdAndUpdate(
       req.params.id,
-      { name, date, time, reason },  // Update all fields
-      { new: true }  // Return the updated document
+      { name, email, date, time, reason },
+      { new: true }
     );
 
     if (!appointment) {
@@ -97,7 +119,6 @@ router.put("/:id", async (req, res) => {
     });
   }
 });
-
 
 // Delete Appointment
 router.delete("/:id", async (req, res) => {
@@ -140,16 +161,15 @@ router.get("/:id", async (req, res) => {
 // Update Appointment Status (Approve/Reject)
 router.put("/status/:id", async (req, res) => {
   try {
-    const { status } = req.body;  // Status should be passed in the request body
+    const { status } = req.body;
 
     if (!status || (status !== 'Approved' && status !== 'Rejected')) {
       return res.status(400).json({ message: "Status must be 'Approved' or 'Rejected'." });
     }
 
-    // Update only the status of the appointment
     const appointment = await Appointment.findByIdAndUpdate(
       req.params.id,
-      { status },  // Update only the status
+      { status },
       { new: true }
     );
 
@@ -169,6 +189,5 @@ router.put("/status/:id", async (req, res) => {
     });
   }
 });
-
 
 export default router;

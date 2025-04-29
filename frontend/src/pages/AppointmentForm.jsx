@@ -11,6 +11,7 @@ const AppointmentForm = () => {
 
   const [formData, setFormData] = useState({
     name: "",
+    email: "",
     date: "",
     time: "",
     reason: "",
@@ -60,6 +61,17 @@ const AppointmentForm = () => {
               className="form-control"
               name="name"
               value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label>Email:</label>
+            <input
+              type="email"
+              className="form-control"
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
             />

@@ -1,3 +1,4 @@
+// ViewAppointment.jsx
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import "./AppointmentList.css"
@@ -27,13 +28,12 @@ function ViewAppointment() {
 
     return (
         <div className="container">
-
             <div className="appointments">
-
                 <div className="appointments-grid">
                     {appointments.map((appt) => (
                         <div key={appt._id} className="card">
                             <h3>{appt.name}</h3>
+                            <p><strong>Email:</strong> {appt.email || "No email provided"}</p>
                             <p><strong>Date:</strong> {appt.date}</p>
                             <p><strong>Time:</strong> {appt.time}</p>
                             <p><strong>Reason:</strong> {appt.reason}</p>
