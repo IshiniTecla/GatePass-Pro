@@ -1,4 +1,3 @@
-// backend/routes/visitorRoute.js
 import express from 'express';
 import Visitor from '../models/visitorModel.js';
 import bcrypt from 'bcrypt';
@@ -7,7 +6,7 @@ import multer from 'multer';
 const router = express.Router();
 const upload = multer(); 
 
-// POST route for visitor registration
+// route for add visitor
 router.post('/register', upload.single('photo'), async (request, response) => {
     try {
         const { name, nic, email, password, contactNumber, hostName } = request.body;
