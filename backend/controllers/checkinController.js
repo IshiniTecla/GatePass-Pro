@@ -267,13 +267,36 @@ const deleteCheckin = async (req, res) => {
   }
 };
 
+// Get all check-ins by user ID
+const getCheckinsByUserId = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const checkins = await Checkin.find({ userId });
+
+    if (checkins.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No check-ins found for this user." });
+    }
+
+    res.status(200).json(checkins);
+  } catch (error) {
+    console.error("Fetch User Check-ins Error:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to fetch check-ins for user", error });
+  }
+};
+
 export {
   sendOTP,
   verifyOTP,
   manualCheckin,
-  handleFaceCheckIn, // Export new face check-in function
+  handleFaceCheckIn,
   getAllCheckins,
   getSingleCheckin,
+  getCheckinsByUserId, // <-- Add this line
   updateCheckin,
   deleteCheckin,
 };

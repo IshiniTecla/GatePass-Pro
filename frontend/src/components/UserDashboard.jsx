@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ChartLine, User, Book, Calendar, QrCode, Home, Bell, LogOut, LogsIcon,
+  ChartLine, User, Book, Calendar, QrCode, Home, Bell, LogOut, HistoryIcon, LogIn,
   CheckCircle, MessageCircle, Menu, ChevronLeft, Mail, HelpCircle, Settings, ChevronDown, Users
 } from "lucide-react";
 import "../CSS/UserDashboard.css";
@@ -11,10 +11,11 @@ import CreateHostProfile from "./hosts/CreateHostProfile";
 import Notifications from "./Notifications";
 import generateColorFromEmail from "../utils/generateColor";
 import useUserData from "../hooks/useUserData";
-import CheckInOptions from "./CheckInOptions";
 import CheckinDetails from "./CheckinDetails";
 import MyVisitation from "./user/MyVisitation";
 import AppointmentConfirmation from "./Appointment";
+import ManualCheckin from "./user/ManualCheckin";
+import FaceScannerCheckIn from "./user/FaceScannerCheckIn"
 import HostDirectory from "./hosts/HostDirectory";
 import FeedbackForm from "../pages/FeedbackForm";
 
@@ -133,12 +134,19 @@ const UserDashboard = () => {
   const menuItems = [
     { name: "Overview", icon: <ChartLine size={20} /> },
     { name: "Profile", icon: <User size={20} /> },
-    { name: "Check-In/Out", icon: <CheckCircle size={20} /> },
+    {
+      name: "Check-In/Out",
+      icon: <CheckCircle size={20} />,
+      subItems: [
+        { name: "Check-In", icon: <LogIn size={20} /> },
+        { name: "Check-Out", icon: <LogOut size={20} /> },
+      ]
+    },
     { name: "Host Directory", icon: <Book size={20} /> },
     { name: "Appointment", icon: <Calendar size={20} /> },
     { name: "QR Scanner", icon: <QrCode size={20} /> },
     { name: "My Visitation", icon: <Users size={20} /> },
-    { name: "Visit Log", icon: <Users size={20} /> },
+    { name: "Visit Log", icon: <HistoryIcon size={20} /> },
     { name: "Become a Host", icon: <Home size={20} /> },
     { name: "Notifications", icon: <Bell size={20} /> },
     { name: "Logout", icon: <LogOut size={20} /> },
@@ -172,13 +180,16 @@ const UserDashboard = () => {
     if (item.name === "Logout") {
       handleLogout();
     } else if (item.subItems) {
-      setExpandedMenus({ [item.name]: true }); // Close other submenus
-      setActiveMenu(item.name);
+      setExpandedMenus((prev) => ({
+        ...prev,
+        [item.name]: !prev[item.name],
+      }));
     } else {
-      setExpandedMenus({}); // Close all submenus
+      setExpandedMenus({});
       setActiveMenu(item.name);
     }
   };
+
 
   // Retry fetching data if there's an error
   const handleRetry = () => {
@@ -236,34 +247,26 @@ const UserDashboard = () => {
                 {!collapsed && <span className="menu-text">{item.name}</span>}
               </div>
 
-              {/* Show sub-menu only when this parent is expanded */}
-              {!collapsed && item.subItems && expandedMenus[item.name] && (
-                <div className="submenu-container">
-                  {item.subItems.map((sub) => (
+              {/* Render submenus if they exist and the parent is expanded */}
+              {item.subItems && expandedMenus[item.name] && (
+                <div className="submenu">
+                  {item.subItems.map((subItem) => (
                     <div
-                      key={sub.name}
-                      onClick={() => handleMenuItemClick(sub)}
-                      className={`submenu-item ${activeMenu === sub.name ? "active" : ""}`}
-                      style={{
-                        paddingLeft: "2rem",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px"
-                      }}
+                      key={subItem.name}
+                      className={`submenu-item ${activeMenu === subItem.name ? "active" : ""}`}
+                      onClick={() => setActiveMenu(subItem.name)}
+                      style={{ paddingLeft: collapsed ? "2.5rem" : "3rem", cursor: "pointer" }}
                     >
-                      {sub.icon}
-                      <span>{sub.name}</span>
+                      {!collapsed && <span className="menu-text">{subItem.name}</span>}
+                      {collapsed && <span className="dot" style={{ marginLeft: "1rem" }}>•</span>}
                     </div>
                   ))}
                 </div>
               )}
-
             </div>
           ))}
-
-
         </div>
+
       </div>
 
       {/* Main Content */}
@@ -339,7 +342,8 @@ const UserDashboard = () => {
         <div className="content-wrapper">
           {activeMenu === "Overview" && <UserOverview />}
           {activeMenu === "Profile" && <Profile />}
-          {activeMenu === "Check-in/out" && <CheckInOptions />}
+          {activeMenu === "Check-In" && <ManualCheckin />}
+          {activeMenu === "Check-Out" && <FaceScannerCheckIn />}
           {activeMenu === "Become a Host" && <CreateHostProfile />}
           {activeMenu === "Notifications" && <Notifications notifications={notifications} />}
           {activeMenu === "My Visitation" && <MyVisitation />}

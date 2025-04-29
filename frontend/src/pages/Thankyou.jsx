@@ -57,8 +57,8 @@ const ThankYou = () => {
                 <p style={styles.message}>
                     We really appreciate you taking the time to share your experience with us.
                 </p>
-                <button style={styles.button} onClick={() => navigate("/")}>
-                    Back to Home
+                <button style={styles.button} onClick={() => navigate("/dashboard")}>
+                    Back
                 </button>
             </div>
         </div>

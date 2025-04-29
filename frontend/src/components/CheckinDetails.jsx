@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Button, Form, Container, Spinner } from "react-bootstrap";
-import { useSnackbar } from 'notistack';
-import { useNavigate } from 'react-router-dom';
-import * as jwt_decode from 'jwt-decode';
-
-// To decode JWT token
+import { useSnackbar } from "notistack";
+import { useNavigate } from "react-router-dom";
 
 const CheckinDetails = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -17,42 +14,23 @@ const CheckinDetails = () => {
     const [search, setSearch] = useState("");
 
     useEffect(() => {
-        const token = localStorage.getItem("token"); // Fetch token from localStorage (or cookies/sessionStorage)
-
-        if (token) {
+        const fetchCheckins = async () => {
+            setLoading(true);
             try {
-                // Decode the token to get user info (including userId)
-                const decodedToken = jwt_decode(token);
-                const userId = decodedToken._id;  // Assuming _id is stored in the token
-
-                // Now fetch check-ins using the decoded userId
-                fetchCheckins(userId);
+                const response = await axios.get("http://localhost:5000/api/checkin/all");
+                setCheckins(response.data);
+                setFilteredCheckins(response.data);
             } catch (error) {
-                console.error("Error decoding token:", error);
-                enqueueSnackbar("Failed to decode token", { variant: "error" });
+                console.error("Error fetching check-ins:", error);
+                enqueueSnackbar("Failed to load check-ins", { variant: "error" });
+            } finally {
+                setLoading(false);
             }
-        } else {
-            enqueueSnackbar("No authentication token found, please log in", { variant: "warning" });
-            navigate("/login"); // Redirect to login if no token
-        }
-    }, [navigate, enqueueSnackbar]);
+        };
 
-    // Function to fetch check-ins using the userId
-    const fetchCheckins = async (userId) => {
-        setLoading(true);
-        try {
-            const response = await axios.get(`http://localhost:5000/api/checkin/users/${userId}`);
-            setCheckins(response.data);
-            setFilteredCheckins(response.data);
-        } catch (error) {
-            console.error("Error fetching check-ins:", error);
-            enqueueSnackbar("Failed to load check-ins", { variant: "error" });
-        } finally {
-            setLoading(false);
-        }
-    };
+        fetchCheckins();
+    }, []);
 
-    // Search filter function
     const handleSearchChange = (e) => {
         setSearch(e.target.value);
         const filtered = checkins.filter((checkin) =>
@@ -67,7 +45,7 @@ const CheckinDetails = () => {
         try {
             await axios.delete(`http://localhost:5000/api/checkin/${checkInId}`);
             enqueueSnackbar("Check-in deleted successfully", { variant: "success" });
-            setFilteredCheckins(filteredCheckins.filter((checkin) => checkin._id !== checkInId));
+            setFilteredCheckins(filteredCheckins.filter((c) => c._id !== checkInId));
         } catch (error) {
             console.error("Error deleting check-in:", error);
             enqueueSnackbar("Failed to delete check-in", { variant: "error" });
@@ -78,10 +56,68 @@ const CheckinDetails = () => {
         navigate(`/edit-checkin/${checkInId}`);
     };
 
+    const handleGenerateBadge = (checkInId) => {
+        // Navigate to badge generation or trigger logic
+        navigate(`/generate-badge/${checkInId}`);
+    };
+
+    const styles = {
+        container: {
+            marginTop: "30px",
+        },
+        title: {
+            textAlign: "center",
+            fontSize: "2rem",
+            color: "#333",
+            marginBottom: "20px",
+        },
+        searchForm: {
+            marginBottom: "20px",
+        },
+        searchInput: {
+            fontSize: "1rem",
+            padding: "10px",
+            width: "100%",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+        },
+        table: {
+            marginTop: "20px",
+            boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+        },
+        tableHeader: {
+            backgroundColor: "#f8f9fa",
+            textAlign: "center",
+            fontSize: "1rem",
+        },
+        tableRow: {
+            textAlign: "center",
+        },
+        actionButton: {
+            marginRight: "8px",
+            padding: "6px 12px",
+            fontSize: "0.85rem",
+            border: "none",
+            borderRadius: "4px",
+        },
+        editButton: {
+            backgroundColor: "#ffc107",
+            color: "#fff",
+        },
+        deleteButton: {
+            backgroundColor: "#dc3545",
+            color: "#fff",
+        },
+        badgeButton: {
+            backgroundColor: "#0d6efd",
+            color: "#fff",
+        },
+    };
+
     return (
-        <Container>
-            <h2>Check-in Details</h2>
-            <Form>
+        <Container style={styles.container}>
+            <h2 style={styles.title}>All Check-in Details</h2>
+            <Form style={styles.searchForm}>
                 <Form.Group controlId="search">
                     <Form.Label>Search Check-ins</Form.Label>
                     <Form.Control
@@ -89,6 +125,7 @@ const CheckinDetails = () => {
                         placeholder="Search by name, email, or phone"
                         value={search}
                         onChange={handleSearchChange}
+                        style={styles.searchInput}
                     />
                 </Form.Group>
             </Form>
@@ -98,8 +135,8 @@ const CheckinDetails = () => {
                     <Spinner animation="border" />
                 </div>
             ) : (
-                <Table striped bordered hover responsive>
-                    <thead>
+                <Table striped bordered hover responsive style={styles.table}>
+                    <thead style={styles.tableHeader}>
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
@@ -112,7 +149,7 @@ const CheckinDetails = () => {
                     </thead>
                     <tbody>
                         {filteredCheckins.map((checkin) => (
-                            <tr key={checkin._id}>
+                            <tr key={checkin._id} style={styles.tableRow}>
                                 <td>{checkin.fullName}</td>
                                 <td>{checkin.email}</td>
                                 <td>{checkin.phone}</td>
@@ -120,8 +157,24 @@ const CheckinDetails = () => {
                                 <td>{checkin.responsiblePerson}</td>
                                 <td>{checkin.visitPurpose}</td>
                                 <td>
-                                    <Button onClick={() => handleEdit(checkin._id)}>Edit</Button>
-                                    <Button onClick={() => handleDelete(checkin._id)}>Delete</Button>
+                                    <Button
+                                        style={{ ...styles.actionButton, ...styles.editButton }}
+                                        onClick={() => handleEdit(checkin._id)}
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        style={{ ...styles.actionButton, ...styles.deleteButton }}
+                                        onClick={() => handleDelete(checkin._id)}
+                                    >
+                                        Delete
+                                    </Button>
+                                    <Button
+                                        style={{ ...styles.actionButton, ...styles.badgeButton }}
+                                        onClick={() => handleGenerateBadge(checkin._id)}
+                                    >
+                                        Generate Badge
+                                    </Button>
                                 </td>
                             </tr>
                         ))}

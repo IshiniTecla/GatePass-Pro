@@ -131,24 +131,6 @@
     font-size: 14px;
   }
 
-  .submenu-container {
-    padding-left: 0.9rem;
-  }
-  
-  .submenu-item {
-    font-size: 0.9rem;
-    padding: 8px 16px;
-    color: #313437;
-    transition: background 0.2s;
-  }
-  
-  .submenu-item:hover,
-  .submenu-item.active {
-    background-color: #748eff;
-    color: #ffffff;
-    border-radius: 4px;
-  }
-  
   
   /* Main Content Styles */
   .main-content {

@@ -159,8 +159,8 @@ const FaceScannerCheckIn = () => {
                         <Camera size={36} style={styles.icon} />
                     </div>
                     <div>
-                        <h2 style={styles.title}>Face Scanner Check-In</h2>
-                        <p style={styles.subtitle}>Secure your Check-In by scanning your face or fallback to OTP.</p>
+                        <h2 style={styles.title}>Quick Check-Out</h2>
+                        <p style={styles.subtitle}>Complete your checkin process by scanning your face or fallback to OTP.</p>
                     </div>
                 </div>
 
@@ -257,11 +257,11 @@ const styles = {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#f5f6fa",
-        padding: "50px 20px",
-        minHeight: "100vh",
+        padding: "10px 10px",
+        minHeight: "90vh",
     },
     card: {
-        width: "550px",
+        width: "600px",
         backgroundColor: "#fff",
         borderRadius: "16px",
         boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",

@@ -1,19 +1,18 @@
 import express from "express";
-import multer from "multer"; // Add multer for handling file uploads
+import multer from "multer";
 import {
   sendOTP,
   verifyOTP,
   manualCheckin,
-  handleFaceCheckIn, // Import the new face check-in handler
+  handleFaceCheckIn,
   getAllCheckins,
+  getCheckinsByUserId,
   getSingleCheckin,
   updateCheckin,
   deleteCheckin,
 } from "../controllers/checkinController.js";
 
 const router = express.Router();
-
-// Set up Multer to handle file uploads (photo)
 const upload = multer({ dest: "uploads/" });
 
 // OTP Routes
@@ -22,12 +21,15 @@ router.post("/verify-otp", verifyOTP);
 
 // Check-In Routes
 router.post("/manual", manualCheckin);
-router.post("/face-check-in", upload.single("photo"), handleFaceCheckIn); // Route for face check-in
+router.post("/face-check-in", upload.single("photo"), handleFaceCheckIn);
 
 // Get All Check-ins
 router.get("/all", getAllCheckins);
 
-// Get Single Check-in
+// ✅ Place more specific route before the general one
+router.get("/users/:userId", getCheckinsByUserId);
+
+// Get Single Check-in (by Visitor ID)
 router.get("/:visitorId", getSingleCheckin);
 
 // Update Check-in

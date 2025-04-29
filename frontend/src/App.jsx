@@ -81,7 +81,7 @@ function App() {
         <Route path="/thankyou" element={<ThankYou />} />
         {/* Catch-all route for 404 Not Found */}
         <Route path="*" element={<NotFound />} />
-      </Routes>\
+      </Routes>
       <TokenWarningModal
         warningThreshold={60}
         onRefresh={handleRefreshToken}

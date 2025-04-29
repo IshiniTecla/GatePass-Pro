@@ -105,7 +105,7 @@ const ManualCheckIn = () => {
     return (
         <Container style={styles.manualCheckInContainer}>
             <div style={styles.manualCheckInCard}>
-                <h2 style={styles.heading}>Manual Check-In</h2>
+                <h2 style={styles.heading}>Check-In</h2>
 
                 <Form onSubmit={handleCheckIn}>
                     <Form.Group controlId="fullName" style={styles.formGroup}>
