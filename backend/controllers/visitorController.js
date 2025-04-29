@@ -1,10 +1,10 @@
 // controllers/visitorController.js
-const mongoose = require("mongoose");
-const Visitor = require("../models/Visitor");
-const Notification = require("../models/Notification");
-const Host = require("../models/Host");
+import mongoose from "mongoose";
+import Visitor from "../models/Visitor.js";
+import Notification from "../models/Notification.js";
+import Host from "../models/Host.js";
 
-exports.createVisitor = async (req, res) => {
+export const createVisitor = async (req, res) => {
   try {
     const { fullName, email, purpose, host, appointmentDate, appointmentTime, type } = req.body;
     
@@ -39,7 +39,7 @@ exports.createVisitor = async (req, res) => {
   }
 };
 
-exports.getAllVisitors = async (req, res) => {
+export const getAllVisitors = async (req, res) => {
   try {
     const visitors = await Visitor.find()
       .populate("host", "name department")
@@ -52,15 +52,13 @@ exports.getAllVisitors = async (req, res) => {
   }
 };
 
-exports.getVisitorById = async (req, res) => {
+export const getVisitorById = async (req, res) => {
   try {
     const visitorId = req.params.id;
     
     let visitor;
     
-    // Handle special cases with early return to avoid attempting ObjectId conversion
     if (visitorId === 'current') {
-      // Get the most recent active visitor
       visitor = await Visitor.findOne({ status: 'active' })
         .sort({ createdAt: -1 })
         .populate("host", "name department");
@@ -76,7 +74,6 @@ exports.getVisitorById = async (req, res) => {
     } 
     
     if (visitorId === 'recent') {
-      // Get the most recent visitor regardless of status
       visitor = await Visitor.findOne()
         .sort({ createdAt: -1 })
         .populate("host", "name department");
@@ -91,19 +88,16 @@ exports.getVisitorById = async (req, res) => {
       });
     }
     
-    // Validate ObjectId before querying
     if (!mongoose.Types.ObjectId.isValid(visitorId)) {
       return res.status(400).json({ success: false, message: 'Invalid visitor ID' });
     }
 
-    // Normal case: Find by ObjectId
     visitor = await Visitor.findById(visitorId).populate("host", "name department");
     
     if (!visitor) {
       return res.status(404).json({ success: false, message: 'Visitor not found' });
     }
     
-    // Return the visitor
     return res.status(200).json({
       success: true,
       data: visitor
@@ -118,7 +112,7 @@ exports.getVisitorById = async (req, res) => {
   }
 };
 
-exports.updateVisitor = async (req, res) => {
+export const updateVisitor = async (req, res) => {
   try {
     const visitorId = req.params.id;
     const updates = req.body;
@@ -140,7 +134,7 @@ exports.updateVisitor = async (req, res) => {
   }
 };
 
-exports.deleteVisitor = async (req, res) => {
+export const deleteVisitor = async (req, res) => {
   try {
     const visitorId = req.params.id;
     
@@ -150,7 +144,6 @@ exports.deleteVisitor = async (req, res) => {
       return res.status(404).json({ error: "Visitor not found" });
     }
     
-    // Also delete related notifications
     await Notification.deleteMany({ relatedTo: visitorId });
     
     return res.status(200).json({ message: "Visitor deleted successfully" });
@@ -160,9 +153,8 @@ exports.deleteVisitor = async (req, res) => {
   }
 };
 
-exports.getRecentVisitors = async (req, res) => {
+export const getRecentVisitors = async (req, res) => {
   try {
-    // Get recent visitors (last 5)
     const recentVisitors = await Visitor.find()
       .sort({ createdAt: -1 })
       .limit(5)
@@ -171,15 +163,12 @@ exports.getRecentVisitors = async (req, res) => {
     return res.status(200).json(recentVisitors);
   } catch (error) {
     console.error("Error getting recent visitors:", error);
-    return res
-      .status(500)
-      .json({ error: "Server error while retrieving visitors" });
+    return res.status(500).json({ error: "Server error while retrieving visitors" });
   }
 };
 
-exports.getCurrentVisitor = async (req, res) => {
+export const getCurrentVisitor = async (req, res) => {
   try {
-    // Get the most recent active visitor without requiring authentication
     const visitor = await Visitor.findOne({ status: 'active' })
       .sort({ checkInTime: -1 })
       .populate("host", "name department");
@@ -188,7 +177,6 @@ exports.getCurrentVisitor = async (req, res) => {
       return res.status(404).json({ success: false, message: 'No current visitor found' });
     }
 
-    // Format visitor data for frontend
     const visitorData = {
       id: visitor._id,
       fullName: visitor.fullName,
@@ -210,15 +198,12 @@ exports.getCurrentVisitor = async (req, res) => {
     });
   } catch (error) {
     console.error("Error getting current visitor:", error);
-    return res
-      .status(500)
-      .json({ success: false, message: "Server error while retrieving visitor" });
+    return res.status(500).json({ success: false, message: "Server error while retrieving visitor" });
   }
 };
 
-exports.getPublicVisitorData = async (req, res) => {
+export const getPublicVisitorData = async (req, res) => {
   try {
-    // This would return data that doesn't require authentication
     const publicData = await Visitor.find({ status: 'checked-in' })
       .select('fullName checkInTime purpose -_id')
       .limit(10);

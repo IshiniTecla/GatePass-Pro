@@ -1,3 +1,4 @@
+// backend/models/User.js
 import mongoose from "mongoose";
 import generateColorFromEmail from "../utils/generateColor.js"; // Corrected import
 
@@ -51,6 +52,7 @@ userSchema.pre("save", function (next) {
   next();
 });
 
+// Create and export the User model
 const User = mongoose.model("User", userSchema);
 
 export default User;

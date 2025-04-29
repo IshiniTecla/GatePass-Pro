@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-const Host = require("../models/Host");
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';  // Adjust the path if necessary
+import Host from '../models/Host.js';  // Adjust the path if necessary
 
-// Authenticate user tokens
+// Add a check for token expiration
 const authenticateUser = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -14,38 +14,37 @@ const authenticateUser = async (req, res, next) => {
     
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     
-    if (decodedToken.type === "user") {
-      // User authentication
-      const user = await User.findById(decodedToken.userId);
+    // Check if token is expired
+    if (decodedToken.exp * 1000 < Date.now()) {
+      return res.status(401).json({ message: "Token expired, please log in again" });
+    }
+    
+    const { type, userId, hostId } = decodedToken;
+    
+    if (type === "user") {
+      const user = await User.findById(userId);
       if (!user) {
         return res.status(401).json({ message: "User not found" });
       }
-      
       req.user = {
-        userId: decodedToken.userId,
+        userId,
         email: user.email,
         role: "user"
       };
-      
-      // Check if user is also a host
-      const host = await Host.findOne({ user: decodedToken.userId });
+      const host = await Host.findOne({ user: userId });
       if (host) {
         req.user.hostId = host.hostID;
       }
-    } else if (decodedToken.type === "host") {
-      // Host authentication
-      const host = await Host.findOne({ hostID: decodedToken.hostId });
+    } else if (type === "host") {
+      const host = await Host.findOne({ hostID: hostId });
       if (!host) {
         return res.status(401).json({ message: "Host not found" });
       }
-      
       req.user = {
-        hostId: decodedToken.hostId,
+        hostId,
         email: host.email,
         role: "host"
       };
-      
-      // Set userId if available
       if (host.user) {
         req.user.userId = host.user;
       }
@@ -60,15 +59,4 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-// Check if user has host privileges
-const authorizeHost = (req, res, next) => {
-  if (!req.user || !req.user.hostId) {
-    return res.status(403).json({ message: "Host privileges required" });
-  }
-  next();
-};
-
-module.exports = {
-  authenticateUser,
-  authorizeHost
-};
+export default authenticateUser;

@@ -1,13 +1,13 @@
-const Host = require("../models/Host");
-const User = require("../models/User");
-const { sendHostProfileEmail } = require("../utils/emailService");
-const fs = require("fs");
-const path = require("path");
-const jwt = require("jsonwebtoken");
-const config = require("../config/default");
+import Host from "../models/Host.js";
+import User from "../models/User.js";
+import { sendHostProfileEmail } from "../utils/emailService.js";
+import fs from "fs";
+import path from "path";
+import jwt from "jsonwebtoken";
+import { config } from "../config/default.js";
 
 // Host login functionality
-const loginHost = async (req, res) => {
+export const loginHost = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -62,7 +62,7 @@ const loginHost = async (req, res) => {
 };
 
 // Create a new host profile
-const createHostProfile = async (req, res) => {
+export const createHostProfile = async (req, res) => {
   try {
     // Retrieve the user from JWT
     const userId = req.user.id;
@@ -141,7 +141,7 @@ const createHostProfile = async (req, res) => {
 };
 
 // Get host details for authenticated host
-const getHostDetails = async (req, res) => {
+export const getHostDetails = async (req, res) => {
   try {
     const host = await Host.findOne({ user: req.user.id }).select("-password");
     
@@ -157,11 +157,8 @@ const getHostDetails = async (req, res) => {
 };
 
 // Get the host profile for the authenticated user
-const getHostProfile = async (req, res) => {
+export const getHostProfile = async (req, res) => {
   try {
-    // This function is assumed to exist in the original code
-    // Implementation not shown in the provided code
-    // Add your implementation here if needed
     const host = await Host.findOne({ user: req.user.id }).select("-password");
     
     if (!host) {
@@ -175,9 +172,8 @@ const getHostProfile = async (req, res) => {
   }
 };
 
-const getAvailableHosts = async (req, res) => {
+export const getAvailableHosts = async (req, res) => {
   try {
-    // Modified to only check isActive since all hosts are now auto-approved
     const hosts = await Host.find({ isActive: true })
       .select("-password -user -__v")
       .sort({ createdAt: -1 });
@@ -189,9 +185,8 @@ const getAvailableHosts = async (req, res) => {
   }
 };
 
-const updateHostProfile = async (req, res) => {
+export const updateHostProfile = async (req, res) => {
   try {
-    // Check if user ID exists
     if (!req.user || !req.user.id) {
       return res.status(401).json({
         message: "Authentication error. Please log in again.",
@@ -221,14 +216,12 @@ const updateHostProfile = async (req, res) => {
       },
     };
 
-    // Store password directly if provided (keeping original approach)
     if (req.body.password) {
       updateData.password = req.body.password;
     }
 
     // Handle avatar update if new file is uploaded
     if (req.file) {
-      // Delete old avatar file if it exists
       if (host.avatar) {
         const oldAvatarPath = path.join(__dirname, "..", "public", host.avatar);
         if (fs.existsSync(oldAvatarPath)) {
@@ -236,7 +229,6 @@ const updateHostProfile = async (req, res) => {
         }
       }
 
-      // Set new avatar path
       updateData.avatar = `/uploads/${req.file.filename}`;
     }
 
@@ -258,7 +250,7 @@ const updateHostProfile = async (req, res) => {
   }
 };
 
-const getHostById = async (req, res) => {
+export const getHostById = async (req, res) => {
   try {
     const host = await Host.findOne({ hostID: req.params.hostId })
       .select("-password -user")
@@ -274,33 +266,27 @@ const getHostById = async (req, res) => {
     res.status(500).json({ message: "Server error fetching host profile" });
   }
 };
-// Add this to your hostController.js file
 
-const updateHostActiveStatus = async (req, res) => {
+export const updateHostActiveStatus = async (req, res) => {
   try {
     const userId = req.user.id;
     
-    // Find host by user ID
     const host = await Host.findOne({ user: userId });
     
     if (!host) {
       return res.status(404).json({ message: "Host profile not found" });
     }
     
-    // Update active status and activeUntil
     const { isActive, activeUntil } = req.body;
     
-    // Validate the request data
     if (typeof isActive !== 'boolean') {
       return res.status(400).json({ message: "isActive must be a boolean value" });
     }
     
-    // If activating, require activeUntil
     if (isActive && !activeUntil) {
       return res.status(400).json({ message: "activeUntil is required when activating host" });
     }
     
-    // Update the host document
     const updatedHost = await Host.findOneAndUpdate(
       { user: userId },
       { 
@@ -321,18 +307,16 @@ const updateHostActiveStatus = async (req, res) => {
   }
 };
 
-// Add a function to check and update expired host statuses
-const checkAndUpdateHostStatuses = async () => {
+// Function to check and update expired host statuses
+export const checkAndUpdateHostStatuses = async () => {
   try {
     const currentTime = new Date();
     
-    // Find all hosts whose active status should expire
     const hostsToUpdate = await Host.find({
       isActive: true,
       activeUntil: { $lt: currentTime }
     });
     
-    // Update each host to inactive
     for (const host of hostsToUpdate) {
       host.isActive = false;
       host.activeUntil = null;
@@ -348,15 +332,3 @@ const checkAndUpdateHostStatuses = async () => {
   }
 };
 
-// Add these functions to module.exports
-module.exports = {
-  loginHost,
-  createHostProfile,
-  getHostProfile,
-  getAvailableHosts,
-  updateHostProfile,
-  getHostById,
-  getHostDetails,
-  updateHostActiveStatus,
-  checkAndUpdateHostStatuses,
-};

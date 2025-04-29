@@ -1,22 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const visitorController = require('../controllers/visitorController');
-const { auth, verifyUserToken } = require('../middleware/userMiddleware');
+import express from 'express';
+import { getCurrentVisitor, getPublicVisitorData, createVisitor, getAllVisitors, getRecentVisitors, getVisitorById, updateVisitor, deleteVisitor } from '../controllers/visitorController.js';
+import { auth, verifyUserToken } from '../middleware/userMiddleware.js';
 
-// First, let's verify what functions are actually available in the controller
-//console.log("Available visitor controller functions:", Object.keys(visitorController));
+const router = express.Router();
+
 
 // Public routes (no authentication required)
-router.get('/current', visitorController.getCurrentVisitor);
-router.get('/public', visitorController.getPublicVisitorData);
+router.get('/current', getCurrentVisitor); // Get current visitor details
+router.get('/public', getPublicVisitorData); // Get public visitor data
 
 // Protected routes (require authentication)
-// This is line 11 in your original file - the likely source of the error
-router.post('/', verifyUserToken, visitorController.createVisitor);
-router.get('/', verifyUserToken, visitorController.getAllVisitors);
-router.get('/recent', verifyUserToken, visitorController.getRecentVisitors);
-router.get('/:id', verifyUserToken, visitorController.getVisitorById);
-router.put('/:id', verifyUserToken, visitorController.updateVisitor);
-router.delete('/:id', verifyUserToken, visitorController.deleteVisitor);
+router.post('/', verifyUserToken, createVisitor); // Create new visitor
+router.get('/', verifyUserToken, getAllVisitors); // Get all visitors
+router.get('/recent', verifyUserToken, getRecentVisitors); // Get recent visitors
+router.get('/:id', verifyUserToken, getVisitorById); // Get a specific visitor by ID
+router.put('/:id', verifyUserToken, updateVisitor); // Update a specific visitor
+router.delete('/:id', verifyUserToken, deleteVisitor); // Delete a specific visitor
 
-module.exports = router;
+export default router;

@@ -1,24 +1,25 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const tokenSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
   },
   token: {
     type: String,
-    required: true
+    required: true,
   },
   revoked: {
     type: Boolean,
-    default: false
+    default: false,
   },
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: '7d' // Auto delete after 7 days
-  }
+    expires: '7d', // Auto delete after 7 days
+  },
 });
 
-module.exports = mongoose.model('Token', tokenSchema);
+const Token = mongoose.model('Token', tokenSchema);
+export default Token;

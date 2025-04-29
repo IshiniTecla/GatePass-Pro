@@ -1,6 +1,6 @@
-const Notification = require("../models/Notification");
+import Notification from "../models/Notification.js";
 
-exports.getUserNotifications = async (req, res) => {
+export const getUserNotifications = async (req, res) => {
   try {
     // Get the user ID from the authenticated request
     const userId = req.user._id;
@@ -18,7 +18,7 @@ exports.getUserNotifications = async (req, res) => {
   }
 };
 
-exports.getRecentNotifications = async (req, res) => {
+export const getRecentNotifications = async (req, res) => {
   try {
     // Find recent notifications - no authentication required
     const notifications = await Notification.find()
@@ -33,7 +33,7 @@ exports.getRecentNotifications = async (req, res) => {
   }
 };
 
-exports.markNotificationAsRead = async (req, res) => {
+export const markNotificationAsRead = async (req, res) => {
   try {
     const notificationId = req.params.id;
     
@@ -54,7 +54,7 @@ exports.markNotificationAsRead = async (req, res) => {
   }
 };
 
-exports.deleteNotification = async (req, res) => {
+export const deleteNotification = async (req, res) => {
   try {
     const notificationId = req.params.id;
     
@@ -71,7 +71,7 @@ exports.deleteNotification = async (req, res) => {
   }
 };
 
-exports.getUnreadCount = async (req, res) => {
+export const getUnreadCount = async (req, res) => {
   try {
     const userId = req.user._id;
     
