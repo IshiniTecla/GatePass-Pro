@@ -78,9 +78,9 @@ function VisitorList() {
     return (
         <div>
             <h2>Visitor List</h2>
-            {/* <button onClick={generateVisitorReport} className="portal-button" >
+            <button onClick={generateVisitorReport} className="portal-button" >
                 Download Visitors Report
-            </button> */}
+            </button>
             {visitors.length > 0 ? (
                 <div className="table-wrapper">
                     <table className="visitor-table">
