@@ -5,16 +5,16 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background: linear-gradient(90deg, #a551ff, #d1e2ff); /* Gradient background */
+    background: linear-gradient(90deg, #a551ff, #d1e2ff); 
 }
 
 .portal-container {
-    background: rgba(255, 255, 255, 0.1); /* Translucent background */
+    background: rgba(255, 255, 255, 0.1); 
     padding: 40px;
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     width: 600px;
-    max-width: 90%; /* Added max-width for mobile responsiveness */
+    max-width: 90%; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -47,7 +47,7 @@ body {
 
 .portal-form .form-group {
     margin-bottom: 20px;
-    width: 100%; /* Ensure form fields take the full width of the container */
+    width: 100%; 
 }
 
 .portal-form .form-group label {
