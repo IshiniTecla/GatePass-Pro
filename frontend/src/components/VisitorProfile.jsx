@@ -17,7 +17,7 @@ function VisitorProfile() {
                 setVisitor(response.data);
                 setLoading(false);
             } catch (err) {
-                console.error('Error fetching visitor profile:', err);  //error message
+                console.error('Error fetching visitor profile:', err);
                 setError('Failed to load visitor profile.');
                 setLoading(false);
             }
@@ -27,18 +27,16 @@ function VisitorProfile() {
     }, [id]);
 
     if (loading) {
-        return <div className="profile-container"><p>Loading visitor profile...</p></div>;
+        return <div className="profile-container"><p className="loading-message">Loading visitor profile...</p></div>;
     }
 
     if (error) {
-        return <div className="profile-container"><p style={{ color: 'red' }}>{error}</p></div>;
+        return <div className="profile-container"><p className="error-message" style={{ color: 'red' }}>{error}</p></div>;
     }
 
     if (!visitor) {
         return <div className="profile-container"><p>Visitor not found.</p></div>;
     }
-
-
 
     return (
         <div className="profile-container">
@@ -62,6 +60,5 @@ function VisitorProfile() {
         </div>
     );
 }
-
 
 export default VisitorProfile;

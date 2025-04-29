@@ -320,7 +320,7 @@ h2 {
 }
 
 .delete-button {
-    background-color: #f44336; /* Red */
+    background-color: #a7453e; /* Red */
     color: white;
 }
 
@@ -574,3 +574,6 @@ button {
 button:hover {
     background-color:   #5177a0;
 }
+
+
+

@@ -41,7 +41,7 @@ function VisitorList() {
     };
 
 
-    //generate report 
+    //generate report part
     const generateVisitorReport = () => {
         try {
             const doc = new jsPDF();
