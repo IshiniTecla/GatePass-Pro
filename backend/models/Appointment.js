@@ -5,7 +5,7 @@ const appointmentSchema = new mongoose.Schema({
   email: { type: String, required: true }, // User's email address
   date: { type: String, required: true }, // Appointment date
   time: { type: String, required: true }, // Appointment time
-   // Reason for appointment
+  reason: { type: String, required: true }, // Reason for appointment
   status: { type: String, default: "Pending" }, // Appointment status
 });
 
