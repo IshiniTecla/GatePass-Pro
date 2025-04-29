@@ -94,7 +94,7 @@ function SignUp() {
                 },
             });
             console.log(result);
-            setSuccessMessage('Registration successful!');
+            setSuccessMessage('Registration successful!');       
             setName('');
             setNIC('');
             setEmail('');
@@ -110,7 +110,7 @@ function SignUp() {
             }, 1500);
         } catch (err) {
             console.error(err);
-            setError('Registration failed. Please try again.');
+            setError('Registration failed. Please try again.');                              //show error message
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);
             }
