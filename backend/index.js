@@ -83,10 +83,10 @@ io.on("connection", (socket) => {
 // Middleware
 app.use(morgan("dev"));
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  credentials: true
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-user-token']
 }));
 app.options("*", cors());
 

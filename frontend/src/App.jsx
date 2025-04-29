@@ -21,8 +21,7 @@ import HostRegistrationFlow from "./components/hosts/HostRegistrationFlow";
 import TokenRefreshHandler from "./components/TokenRefreshHandler";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LogoutHandler from "./components/LogoutHandler";
-import HostProfile from "./components/hosts/HostProfile";
-import ViewHostProfile from "./components/hosts/ViewHostProfile";
+//import AppointmentForm from "./components/appointment/AppointmentForm";
 
 function App() {
   const userService = new UserService();
@@ -55,6 +54,7 @@ function App() {
           <Route path="/host-login" element={<HostLogin />} />
           <Route path="/become-host" element={<HostRegistrationFlow />} />
           <Route path="/host/register" element={<HostRegistrationFlow />} />
+          {/*<Route path="/appointment/:hostId" element={<AppointmentForm/>}/>*/}
 
 
 
