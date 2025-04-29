@@ -43,10 +43,10 @@ function VisitorList() {
     const generateVisitorReport = () => {
         try {
             const doc = new jsPDF();
-            doc.setFontSize(18);
+            doc.setFontSize(17);
             doc.text('Visitor Report', 14, 20);
 
-            const tableColumn = ["Full Name", "NIC", "Email", "Contact No", "Host Name"];
+            const tableColumn = ["Full Name", "NIC", "Email", "Contact Number", "Host Name"];
             const tableRows = visitors.map(visitor => [
                 visitor.name,
                 visitor.nic,
