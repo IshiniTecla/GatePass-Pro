@@ -19,11 +19,11 @@ router.post('/register', upload.single('photo'), async (request, response) => {
         // Check for existing NIC or email
         const existingVisitorNIC = await Visitor.findOne({ nic });
         if (existingVisitorNIC) {
-            return response.status(409).send({ message: 'NIC already registered.' });
+            return response.status(409).send({ message: 'NIC already registered.' });   //nic validation
         }
         const existingVisitorEmail = await Visitor.findOne({ email });
         if (existingVisitorEmail) {
-            return response.status(409).send({ message: 'Email already registered.' });
+            return response.status(409).send({ message: 'Email already registered.' });   //email validation
         }
 
 
