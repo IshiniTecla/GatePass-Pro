@@ -14,6 +14,7 @@ import RegisterPage from "./pages/Register";
 import ExpertsPage from "./pages/ExpertsPage";
 import LoginPage from "./pages/LoginPage";
 import HostDashboard from "./components/HostDashboard";
+import CheckinDetails from './components/CheckinDetails';
 import NotFound from "./components/NotFound";
 import SessionManager from "./components/SessionManager";
 import UserDashboard from "./components/UserDashboard";  // Make sure this component exists
@@ -66,6 +67,8 @@ function App() {
           </ProtectedRoute>
         } />
 
+
+        <Route path="/checkin-details" element={<CheckinDetails />} />
         <Route path="/edit-feedback/:id" element={<EditFeedback />} />
         <Route path="/feedback-form" element={<FeedbackForm />} />
         <Route path="/feedback-list" element={<FeedbackList />} />

@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ChartLine, User, Book, Calendar, QrCode, Home, Bell, LogOut, Camera,
+  ChartLine, User, Book, Calendar, QrCode, Home, Bell, LogOut, LogsIcon,
   CheckCircle, MessageCircle, Menu, ChevronLeft, Mail, HelpCircle, Settings, ChevronDown, Users
 } from "lucide-react";
 import "../CSS/UserDashboard.css";
 import Profile from "./Profile";
 import UserOverview from "./UserOverview";
 import CreateHostProfile from "./hosts/CreateHostProfile";
-import ManualCheckIn from "../components/user/ManualCheckIn";
-import FaceScannerCheckIn from "../components/user/FaceScannerCheckIn";
 import Notifications from "./Notifications";
 import generateColorFromEmail from "../utils/generateColor";
 import useUserData from "../hooks/useUserData";
-import MyVisitation from "../components/user/MyVisitation";
+import CheckInOptions from "./CheckInOptions";
+import CheckinDetails from "./CheckinDetails";
+import MyVisitation from "./user/MyVisitation";
 import AppointmentConfirmation from "./Appointment";
 import HostDirectory from "./hosts/HostDirectory";
 import FeedbackForm from "../pages/FeedbackForm";
@@ -133,20 +133,12 @@ const UserDashboard = () => {
   const menuItems = [
     { name: "Overview", icon: <ChartLine size={20} /> },
     { name: "Profile", icon: <User size={20} /> },
-    {
-      name: "Check-In",
-      icon: <CheckCircle size={20} />,
-      subItems: [
-        { name: "Manual", icon: <Calendar size={20} /> },
-        { name: "Biometrics", icon: <Camera size={20} /> }
-      ]
-    },
-
-
+    { name: "Check-In/Out", icon: <CheckCircle size={20} /> },
     { name: "Host Directory", icon: <Book size={20} /> },
     { name: "Appointment", icon: <Calendar size={20} /> },
     { name: "QR Scanner", icon: <QrCode size={20} /> },
     { name: "My Visitation", icon: <Users size={20} /> },
+    { name: "Visit Log", icon: <Users size={20} /> },
     { name: "Become a Host", icon: <Home size={20} /> },
     { name: "Notifications", icon: <Bell size={20} /> },
     { name: "Logout", icon: <LogOut size={20} /> },
@@ -180,12 +172,10 @@ const UserDashboard = () => {
     if (item.name === "Logout") {
       handleLogout();
     } else if (item.subItems) {
-      setExpandedMenus((prev) => ({
-        ...prev,
-        [item.name]: !prev[item.name], // Toggle visibility
-      }));
+      setExpandedMenus({ [item.name]: true }); // Close other submenus
       setActiveMenu(item.name);
     } else {
+      setExpandedMenus({}); // Close all submenus
       setActiveMenu(item.name);
     }
   };
@@ -349,12 +339,11 @@ const UserDashboard = () => {
         <div className="content-wrapper">
           {activeMenu === "Overview" && <UserOverview />}
           {activeMenu === "Profile" && <Profile />}
-          {activeMenu === "Check-in" && <CheckInOptions />}
-          {activeMenu === "Manual" && <ManualCheckIn />}
-          {activeMenu === "Biometrics" && <FaceScannerCheckIn />}
+          {activeMenu === "Check-in/out" && <CheckInOptions />}
           {activeMenu === "Become a Host" && <CreateHostProfile />}
           {activeMenu === "Notifications" && <Notifications notifications={notifications} />}
           {activeMenu === "My Visitation" && <MyVisitation />}
+          {activeMenu === "Visit Log" && <CheckinDetails />}
           {activeMenu === "Appointment" && <AppointmentConfirmation />}
           {activeMenu === "Host Directory" && <HostDirectory />}
           {activeMenu === "Feedback" && <FeedbackForm />}

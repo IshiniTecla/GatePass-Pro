@@ -3,22 +3,18 @@ import axios from "axios";
 import { Form, Button, Container, Spinner } from "react-bootstrap";
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-import html2canvas from "html2canvas";
-import ReactDOM from "react-dom";
-
 
 const ManualCheckIn = () => {
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
-    const [visitorName, setVisitorName] = useState("");
+    const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
-    const [contactNumber, setContactNumber] = useState("");
+    const [phone, setPhone] = useState("");
     const [checkInTime, setCheckInTime] = useState("");
-    const [otp, setOtp] = useState("");
-    const [otpSent, setOtpSent] = useState(false);
+    const [responsiblePerson, setResponsiblePerson] = useState("");
+    const [visitPurpose, setVisitPurpose] = useState("");
     const [loading, setLoading] = useState(false);
 
-    // Inline styles
     const styles = {
         manualCheckInContainer: {
             display: 'flex',
@@ -50,76 +46,48 @@ const ManualCheckIn = () => {
             width: '100%',
             marginTop: '15px',
         },
-        message: {
-            textAlign: 'center',
-            color: '#007bff',
-            marginBottom: '15px',
-            fontWeight: '500',
-        },
-        responsiveCard: {
-            padding: '20px',
-        },
     };
 
-    const sendOtp = async (e) => {
+    const handleCheckIn = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/checkin/send-otp", {
-                email,
-            });
-
-            console.log("OTP Sent:", response.data);
-            enqueueSnackbar("OTP sent to your email.", {
-                variant: 'success',
-                autoHideDuration: 2000,
-            });
-            setOtpSent(true);
-        } catch (error) {
-            console.error("Error sending OTP:", error);
-            enqueueSnackbar("Failed to send OTP. Please try again.", {
-                variant: 'error',
-                autoHideDuration: 2000,
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const verifyOtpAndCheckIn = async () => {
-        setLoading(true);
-
-        try {
             const requestData = {
-                visitorName,
+                fullName,            // ✅ now matches backend
                 email,
-                contactNumber,
+                phone,               // ✅ now matches backend
+                visitPurpose,        // ✅ now matches backend
+                responsiblePerson,   // ✅ now matches backend
                 checkInTime,
-                otp: otp.toString(),
             };
 
-            const response = await axios.post("http://localhost:5000/api/checkin/verify-otp", requestData);
+            const response = await axios.post("http://localhost:5000/api/checkin/manual", requestData);
             const visitorData = response.data;
 
-            enqueueSnackbar("Check-in successful!", { variant: 'success', autoHideDuration: 2000 });
+            // Assuming response contains an ID or check-in identifier (e.g., `visitorId` or `checkInId`)
+            const checkInId = visitorData.checkInId; // Adjust according to your API response
 
-            // Create a temporary div to render badge
-            const tempDiv = document.createElement("div");
-            document.body.appendChild(tempDiv);
+            if (checkInId) {
+                // Trigger the badge download after check-in success
+                const badgeResponse = await axios.get(`http://localhost:5000/api/checkin/badge/${checkInId}`, {
+                    responseType: 'blob',
+                });
 
-            ReactDOM.render(<Badge visitor={visitorData} ref={tempDiv} />, tempDiv);
-
-            await html2canvas(tempDiv).then(canvas => {
-                const link = document.createElement("a");
-                link.download = `${visitorData.visitorName}_badge.png`;
-                link.href = canvas.toDataURL();
+                // Create a URL for the badge blob and trigger the download
+                const blob = badgeResponse.data;
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'visitor_badge.pdf'); // Set file name for download
+                document.body.appendChild(link);
                 link.click();
-            });
+                document.body.removeChild(link);
+            }
 
-            document.body.removeChild(tempDiv);
+            enqueueSnackbar("Check-in successful!", { variant: 'success', autoHideDuration: 2000 });
+            navigate("/checkin-details");  // Navigate to the dashboard
 
-            navigate("/dashboard");
         } catch (error) {
             console.error("Check-in Error:", error.response?.data || error.message);
             enqueueSnackbar("Check-in failed. Please try again.", {
@@ -131,6 +99,7 @@ const ManualCheckIn = () => {
         }
     };
 
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -141,7 +110,7 @@ const ManualCheckIn = () => {
                     },
                 });
                 const user = response.data;
-                setVisitorName(`${user.firstName} ${user.lastName}`);
+                setFullName(`${user.firstName} ${user.lastName}`);
                 setEmail(user.email);
             } catch (error) {
                 console.error("Failed to fetch user data:", error);
@@ -151,20 +120,18 @@ const ManualCheckIn = () => {
         fetchUserData();
     }, []);
 
-
     return (
         <Container style={styles.manualCheckInContainer}>
             <div style={styles.manualCheckInCard}>
                 <h2 style={styles.heading}>Manual Check-In</h2>
 
-                <Form onSubmit={otpSent ? verifyOtpAndCheckIn : sendOtp}>
-                    <Form.Group controlId="visitorName" style={styles.formGroup}>
+                <Form onSubmit={handleCheckIn}>
+                    <Form.Group controlId="fullName" style={styles.formGroup}>
                         <Form.Label>Name</Form.Label>
                         <Form.Control
                             type="text"
-                            value={visitorName}
-                            onChange={(e) => setVisitorName(e.target.value)}
-                            required
+                            value={fullName}
+                            readOnly // ✅ makes the field uneditable
                             style={styles.formControl}
                         />
                     </Form.Group>
@@ -174,18 +141,18 @@ const ManualCheckIn = () => {
                         <Form.Control
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
+                            readOnly // ✅ makes the field uneditable
                             style={styles.formControl}
                         />
                     </Form.Group>
 
-                    <Form.Group controlId="contactNumber" style={styles.formGroup}>
+
+                    <Form.Group controlId="phone" style={styles.formGroup}>
                         <Form.Label>Contact Number</Form.Label>
                         <Form.Control
                             type="tel"
-                            value={contactNumber}
-                            onChange={(e) => setContactNumber(e.target.value)}
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
                             required
                             style={styles.formControl}
                         />
@@ -202,29 +169,31 @@ const ManualCheckIn = () => {
                         />
                     </Form.Group>
 
-                    {otpSent && (
-                        <>
-                            <Form.Group controlId="otp" style={styles.formGroup}>
-                                <Form.Label>Enter OTP</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    value={otp}
-                                    onChange={(e) => setOtp(e.target.value)}
-                                    required
-                                    style={styles.formControl}
-                                />
-                            </Form.Group>
-                            <Button variant="primary" type="submit" style={styles.button} disabled={loading}>
-                                {loading ? <Spinner animation="border" size="sm" /> : "Verify & Check In"}
-                            </Button>
-                        </>
-                    )}
+                    <Form.Group controlId="responsiblePerson" style={styles.formGroup}>
+                        <Form.Label>Person You Visit</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={responsiblePerson}
+                            onChange={(e) => setResponsiblePerson(e.target.value)}
+                            required
+                            style={styles.formControl}
+                        />
+                    </Form.Group>
 
-                    {!otpSent && (
-                        <Button variant="secondary" type="submit" style={styles.button} disabled={loading}>
-                            {loading ? <Spinner animation="border" size="sm" /> : "Send OTP"}
-                        </Button>
-                    )}
+                    <Form.Group controlId="visitPurpose" style={styles.formGroup}>
+                        <Form.Label>Purpose of Visit</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={visitPurpose}
+                            onChange={(e) => setVisitPurpose(e.target.value)}
+                            required
+                            style={styles.formControl}
+                        />
+                    </Form.Group>
+
+                    <Button variant="primary" type="submit" style={styles.button} disabled={loading}>
+                        {loading ? <Spinner animation="border" size="sm" /> : "Check In"}
+                    </Button>
                 </Form>
             </div>
         </Container>

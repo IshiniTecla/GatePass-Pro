@@ -524,7 +524,7 @@ const HomePage = () => {
                         Check-In
                     </a>
 
-                    <a href="/checkout" style={styles.secondaryButton}>
+                    <a href="/dashboard" style={styles.secondaryButton}>
                         Check-Out
                     </a>
                 </div>

@@ -24,97 +24,210 @@ const transporter = nodemailer.createTransport({
 // Generate OTP function
 const generateOTP = () => crypto.randomInt(100000, 999999).toString();
 
-// **GET All Checkins (Visitors)**
+// Route for sending OTP
+router.post("/send-otp", async (req, res) => {
+  const { email } = req.body;
+
+  // Validate the email
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  try {
+    const otp = generateOTP();
+
+    // Save OTP in the database or session for verification later
+    // Assuming you have a `Checkin` model or other place to store OTP
+    const checkin = await Checkin.findOne({ email });
+    if (checkin) {
+      checkin.otp = otp; // Update OTP field for that visitor
+      await checkin.save();
+    } else {
+      await Checkin.create({ email, otp }); // Create new visitor with OTP
+    }
+
+    // Send OTP email
+    await transporter.sendMail({
+      to: email,
+      subject: "Your OTP Code for Check-In",
+      text: `Your OTP code is: ${otp}`,
+    });
+
+    res.status(200).json({ message: "OTP sent successfully." });
+  } catch (error) {
+    console.error("Send OTP Error:", error);
+    res.status(500).json({ message: "Error sending OTP." });
+  }
+});
+
+// Route for OTP verification
+router.post("/verify-otp", async (req, res) => {
+  const { email, otp } = req.body;
+
+  // Validate OTP
+  if (!email || !otp) {
+    return res.status(400).json({ message: "Email and OTP are required." });
+  }
+
+  try {
+    const checkin = await Checkin.findOne({ email });
+    if (!checkin) {
+      return res.status(404).json({ message: "Visitor not found." });
+    }
+
+    if (checkin.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP." });
+    }
+
+    // OTP is valid
+    checkin.otpVerified = true; // Set OTP verified flag
+    await checkin.save();
+
+    res.status(200).json({ message: "OTP verified successfully." });
+  } catch (error) {
+    console.error("OTP Verification Error:", error);
+    res.status(500).json({ message: "Error verifying OTP." });
+  }
+});
+
+// 🔥 Manual Check-In Route (POST)
+router.post("/manual", async (req, res) => {
+  try {
+    const {
+      fullName,
+      email,
+      phone,
+      visitPurpose,
+      responsiblePerson,
+      checkInTime,
+    } = req.body;
+
+    // Validate required fields
+    if (
+      !fullName ||
+      !email ||
+      !phone ||
+      !visitPurpose ||
+      !responsiblePerson ||
+      !checkInTime
+    ) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const newVisitor = new Checkin({
+      visitorName: fullName, // ✅ Map fullName to visitorName
+      email,
+      contactNumber: phone, // ✅ Map phone to contactNumber
+      visitPurpose,
+      responsiblePerson,
+      checkInTime: new Date(checkInTime),
+      isVerified: false,
+      photo: "N/A", // Placeholder since no photo uploaded in manual
+      otp: null, // ✅ No OTP needed for manual
+    });
+
+    await newVisitor.save();
+
+    res.status(201).json({
+      message: "Manual check-in successful!",
+      visitorId: newVisitor._id,
+    });
+  } catch (error) {
+    console.error("Manual Check-In Error:", error);
+    res.status(500).json({ message: "Manual check-in failed.", error });
+  }
+});
+
+// **GET All Check-ins (Visitors)**
 router.get("/all", async (req, res) => {
   try {
     const visitors = await Checkin.find();
+    console.log("Fetched visitors:", visitors); // Log the fetched visitors
     res.status(200).json(visitors);
   } catch (error) {
-    console.error("Fetch Checkins Error:", error);
+    console.error("Fetch Check-ins Error:", error);
     res.status(500).json({ message: "Failed to fetch visitors", error });
   }
 });
 
-// **Send OTP Route (POST)**
-router.post("/send-otp", async (req, res) => {
+// **GET Single Check-in (Visitor)**
+router.get("/:visitorId", async (req, res) => {
   try {
-    const { email } = req.body;
-
-    if (!email) {
-      return res.status(400).json({ message: "Email is required." });
+    const visitor = await Checkin.findById(req.params.visitorId);
+    if (!visitor) {
+      return res.status(404).json({ message: "Visitor not found" });
     }
-
-    const otp = generateOTP();
-
-    const visitor = new Checkin({
-      email,
-      otp,
-      isVerified: false,
-      checkInTime: new Date(), // Dummy value
-      photo: "N/A", // Dummy value
-    });
-
-    await visitor.save();
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "OTP Verification for GatePass Pro Check-In",
-      text: `Your OTP for check-in is: ${otp}`,
-    };
-
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.error("Nodemailer Error:", error);
-        return res.status(500).json({ message: "Failed to send OTP.", error });
-      }
-      console.log("Email Sent: ", info);
-      res.status(200).json({
-        message: "OTP sent to email.",
-        visitorId: visitor._id,
-      });
-    });
+    res.status(200).json(visitor);
   } catch (error) {
-    console.error("Send OTP Error:", error);
-    res.status(500).json({ message: "Failed to send OTP.", error });
+    console.error("Fetch Single Check-in Error:", error);
+    res.status(500).json({ message: "Failed to fetch visitor", error });
   }
 });
 
-// **Verify OTP & Check-In Route (POST)**
-router.post("/verify-otp", async (req, res) => {
+// **PUT Edit Check-in (Update visitor details)**
+router.put("/:visitorId", async (req, res) => {
   try {
-    const { visitorName, email, contactNumber, checkInTime, otp } = req.body;
+    const {
+      fullName,
+      email,
+      phone,
+      visitPurpose,
+      responsiblePerson,
+      checkInTime,
+    } = req.body;
 
-    if (!visitorName || !email || !contactNumber || !checkInTime || !otp) {
+    // Validate required fields
+    if (
+      !fullName ||
+      !email ||
+      !phone ||
+      !visitPurpose ||
+      !responsiblePerson ||
+      !checkInTime
+    ) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
-    const visitor = await Checkin.findOne({ email }); // Corrected model to Checkin
-
+    const visitor = await Checkin.findById(req.params.visitorId);
     if (!visitor) {
-      return res.status(404).json({ message: "Visitor not found." });
-    }
-
-    if (visitor.otp !== otp) {
-      return res.status(400).json({ message: "Invalid OTP." });
+      return res.status(404).json({ message: "Visitor not found" });
     }
 
     // Update visitor details
-    visitor.visitorName = visitorName;
-    visitor.contactNumber = contactNumber;
+    visitor.fullName = fullName;
+    visitor.email = email;
+    visitor.phone = phone;
+    visitor.visitPurpose = visitPurpose;
+    visitor.responsiblePerson = responsiblePerson;
     visitor.checkInTime = new Date(checkInTime);
-    visitor.otp = null;
-    visitor.isVerified = false; // Admin verification pending
 
     await visitor.save();
 
     res.status(200).json({
-      message: "OTP verified. Check-in successful. Awaiting admin approval.",
+      message: "Check-in details updated successfully",
       visitorId: visitor._id,
     });
   } catch (error) {
-    console.error("Verify OTP Error:", error);
-    res.status(500).json({ message: "OTP verification failed.", error });
+    console.error("Edit Check-in Error:", error);
+    res.status(500).json({ message: "Failed to update check-in", error });
+  }
+});
+
+// **DELETE Check-in (Remove a visitor)**
+router.delete("/:visitorId", async (req, res) => {
+  try {
+    const visitor = await Checkin.findByIdAndDelete(req.params.visitorId);
+    if (!visitor) {
+      return res.status(404).json({ message: "Visitor not found" });
+    }
+
+    res.status(200).json({
+      message: "Visitor deleted successfully",
+      visitorId: visitor._id,
+    });
+  } catch (error) {
+    console.error("Delete Check-in Error:", error);
+    res.status(500).json({ message: "Failed to delete visitor", error });
   }
 });
 
