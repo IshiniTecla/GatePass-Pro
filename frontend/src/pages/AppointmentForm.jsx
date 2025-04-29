@@ -12,7 +12,6 @@ const AppointmentForm = () => {
   const [formData, setFormData] = useState({
     name: "",
     date: "",
-  
     time: "",
     reason: "",
   });
