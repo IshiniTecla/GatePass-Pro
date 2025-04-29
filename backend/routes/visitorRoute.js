@@ -26,6 +26,8 @@ router.post('/register', upload.single('photo'), async (request, response) => {
             return response.status(409).send({ message: 'Email already registered.' });
         }
 
+
+
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -42,7 +44,7 @@ router.post('/register', upload.single('photo'), async (request, response) => {
         const savedVisitor = await newVisitor.save();
         return response.status(201).json(savedVisitor);
     } catch (error) {
-        console.error('Error registering visitor:', error);
+        console.error('registering visitor unsuccessful:', error);
         return response.status(500).send({ message: error.message });
     }
 });
