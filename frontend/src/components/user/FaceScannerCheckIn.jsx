@@ -1,10 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { Camera } from "lucide-react";
-import { useSnackbar } from 'notistack'; // For Snackbar notifications
+import { useSnackbar } from 'notistack';
 
 const FaceScannerCheckIn = () => {
-    const { enqueueSnackbar } = useSnackbar(); // Snackbar for feedback
+    const { enqueueSnackbar } = useSnackbar();
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
     const [photoTaken, setPhotoTaken] = useState(false);
@@ -58,25 +58,30 @@ const FaceScannerCheckIn = () => {
                 console.error("Failed to fetch user data:", error);
             }
         };
-
         fetchUserData();
     }, []);
 
     const savePhoto = async () => {
         const checkInTime = new Date().toISOString();
+        const token = localStorage.getItem("token");
         try {
-            const response = await axios.post("http://localhost:5000/api/save-face-photo", {
+            const response = await axios.post("http://localhost:5000/api/attendance/check-in", {
+                method: "face",
                 photo: capturedImage,
                 checkInTime,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
-            if (response.status === 201) {
-                alert("Face photo saved successfully! Check-In completed.");
+            if (response.status === 200) {
+                alert("Face check-in successful!");
                 resetCamera();
             } else {
-                throw new Error("Failed to save face photo");
+                throw new Error("Failed to check in with face");
             }
         } catch (error) {
-            console.error("Error saving face photo:", error);
+            console.error("Error during face check-in:", error);
             alert(error.response?.data?.message || "Error during face check-in");
         }
     };
@@ -117,9 +122,17 @@ const FaceScannerCheckIn = () => {
         }
 
         setLoading(true);
+        const token = localStorage.getItem("token");
         try {
-            // Verify OTP endpoint should match your backend route
-            const response = await axios.post("http://localhost:5000/api/verify-otp", { email, otp });
+            const response = await axios.post("http://localhost:5000/api/attendance/check-in", {
+                method: "otp",
+                email,
+                otp,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
             if (response.status === 200) {
                 alert("OTP Verified! Check-In completed.");
@@ -223,7 +236,7 @@ const FaceScannerCheckIn = () => {
                                         <button style={styles.saveButton} onClick={handleOtpSubmit} disabled={loading}>
                                             {loading ? "Verifying..." : "Verify OTP"}
                                         </button>
-                                        <button style={styles.cancelButton} onClick={() => { setOtpSent(false); setOtp(""); }}>
+                                        <button style={styles.cancelButton} onClick={() => { setOtpSent(false); setOtp(""); }} >
                                             Re-enter Email
                                         </button>
                                     </div>
@@ -248,7 +261,7 @@ const styles = {
         minHeight: "100vh",
     },
     card: {
-        width: "550px", // Wider card
+        width: "550px",
         backgroundColor: "#fff",
         borderRadius: "16px",
         boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
@@ -324,8 +337,8 @@ const styles = {
         marginTop: "20px",
         display: "flex",
         flexDirection: "column",
-        gap: "15px", // Added gap between buttons
-        alignItems: "center", // Center align the buttons
+        gap: "15px",
+        alignItems: "center",
     },
     captureButton: {
         backgroundColor: "#007bff",
@@ -375,8 +388,5 @@ const styles = {
         borderRadius: "8px",
     },
 };
-
-
-
 
 export default FaceScannerCheckIn;

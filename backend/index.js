@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-app.use("/feedback", feedbackRoutes);
+app.use("/api/feedback", feedbackRoutes);
 app.use("/api/checkin", checkinRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/visitors", visitorRoutes);

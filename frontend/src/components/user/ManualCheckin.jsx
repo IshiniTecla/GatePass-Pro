@@ -61,29 +61,12 @@ const ManualCheckIn = () => {
                 responsiblePerson,   // ✅ now matches backend
                 checkInTime,
             };
-
             const response = await axios.post("http://localhost:5000/api/checkin/manual", requestData);
             const visitorData = response.data;
 
-            // Assuming response contains an ID or check-in identifier (e.g., `visitorId` or `checkInId`)
-            const checkInId = visitorData.checkInId; // Adjust according to your API response
+            const checkInId = visitorData.visitorId; // ✅ updated to match backend response key
 
-            if (checkInId) {
-                // Trigger the badge download after check-in success
-                const badgeResponse = await axios.get(`http://localhost:5000/api/checkin/badge/${checkInId}`, {
-                    responseType: 'blob',
-                });
-
-                // Create a URL for the badge blob and trigger the download
-                const blob = badgeResponse.data;
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'visitor_badge.pdf'); // Set file name for download
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
+            // Badge logic removed as requested
 
             enqueueSnackbar("Check-in successful!", { variant: 'success', autoHideDuration: 2000 });
             navigate("/checkin-details");  // Navigate to the dashboard
@@ -98,7 +81,6 @@ const ManualCheckIn = () => {
             setLoading(false);
         }
     };
-
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -145,7 +127,6 @@ const ManualCheckIn = () => {
                             style={styles.formControl}
                         />
                     </Form.Group>
-
 
                     <Form.Group controlId="phone" style={styles.formGroup}>
                         <Form.Label>Contact Number</Form.Label>
