@@ -14,6 +14,10 @@ const Sidebar = () => {
         <div className={`sidebar ${isOpen ? "open" : "closed"}`}>
             {/* Toggle Button */}
 
+            {/* Logo */}
+            <div className="logo">
+                <span>GatePass Pro</span>
+            </div>
 
             
             {/* Navigation Links */}
