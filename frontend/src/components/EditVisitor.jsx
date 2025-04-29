@@ -19,7 +19,7 @@ function EditVisitor() {
                 setLoading(false);
             } catch (err) {
                 console.error('Error fetching visitor:', err);
-                setError('Failed to load visitor data for editing.');
+                setError('Failed to load visitor data for editing.');            //show error message
                 setLoading(false);
             }
         };
@@ -45,7 +45,7 @@ function EditVisitor() {
             
             const { _id, __v, photo, ...visitorData } = visitor;
 
-            await axios.put(`http://localhost:5555/visitors/${id}`, visitorData);
+            await axios.put(`http://localhost:5555/visitors/${id}`, visitorData);     //successful message
             setSuccessMessage('Visitor details updated successfully!');
             setLoading(false);
             setTimeout(() => {
