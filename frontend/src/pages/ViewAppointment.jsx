@@ -7,7 +7,7 @@ function ViewAppointment() {
     const [appointments, setAppointments] = useState([]);
 
     useEffect(() => {
-        // Fetch all appointments
+        
         axios.get('http://localhost:5000/api/appointments')
             .then((res) => setAppointments(res.data))
             .catch((err) => console.error('Error fetching appointments:', err));
