@@ -3,7 +3,11 @@ import Appointment from "../models/Appointment.js";
 
 const router = express.Router();
 
-
+    
+// Create Appointment
+router.post("/", async (req, res) => {
+  try {
+    const { name, email, date, time, reason } = req.body;
     // Validate required fields
     if (!name || !email || !date || !time || !reason) {
       return res.status(400).json({ message: "All fields are required." });
