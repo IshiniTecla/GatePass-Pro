@@ -15,11 +15,7 @@ const Sidebar = () => {
             {/* Toggle Button */}
 
 
-            {/* Logo */}
-            <div className="logo">
-                <span>GatePass Pro</span>
-            </div>
-
+            
             {/* Navigation Links */}
             <nav className="nav-links">
                 <Link to="/visitor-dashboard" className="nav-item">
