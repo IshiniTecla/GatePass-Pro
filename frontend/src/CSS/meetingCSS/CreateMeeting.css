@@ -1,0 +1,223 @@
+.create-meeting-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .create-meeting-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #2d3748;
+  }
+  
+  .meeting-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    color: #4a5568;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: #4299e1;
+  }
+  
+  .time-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  
+  .checkbox-group {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .checkbox-group input {
+    width: auto;
+  }
+  
+  .participants-section {
+    margin-top: 1rem;
+  }
+  
+  .participants-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  .add-participant-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .add-participant-btn:hover {
+    background-color: #3182ce;
+  }
+  
+  .participant-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .remove-participant-btn {
+    padding: 0.5rem;
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .remove-participant-btn:hover {
+    background-color: #c53030;
+  }
+  
+  .submit-btn-container {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  
+  .submit-btn {
+    padding: 0.75rem 2rem;
+    background-color: #48bb78;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .submit-btn:hover {
+    background-color: #38a169;
+  }
+  
+  .submit-btn:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+  }
+  
+  .meeting-created-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .meeting-details {
+    background-color: #f7fafc;
+    padding: 1.5rem;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+  }
+  
+  .meeting-details p {
+    margin: 0.5rem 0;
+  }
+  
+  .invitation-section {
+    margin-top: 1rem;
+  }
+  
+  .participant-invitation {
+    background-color: #f7fafc;
+    padding: 1rem;
+    border-radius: 6px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
+  }
+  
+  .participant-name {
+    margin-bottom: 1rem;
+  }
+  
+  .qr-code-container {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .join-link {
+    word-break: break-all;
+    font-size: 0.9rem;
+    color: #4a5568;
+  }
+  
+  .start-meeting-btn-container {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  
+  .start-meeting-btn {
+    padding: 0.75rem 2rem;
+    background-color: #4299e1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .start-meeting-btn:hover {
+    background-color: #3182ce;
+  }
+  
+  .start-meeting-btn:disabled {
+    background-color: #a0aec0;
+    cursor: not-allowed;
+  }
+  
+  @media (max-width: 768px) {
+    .time-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .participant-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .remove-participant-btn {
+      grid-column: 1;
+      width: 100%;
+    }
+  }
