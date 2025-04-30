@@ -4,12 +4,6 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
 import checkinRoutes from "./routes/checkinRoutes.js";
-import appointmentRoutes from "./routes/appointmentRoutes.js";
-import hostRoutes from "./routes/hostRoutes.js";
-import notificationRoutes from "./routes/notificationRoutes.js";
-import statisticsRoutes from "./routes/statisticsRoutes.js";
-import userRoutes from "./routes/userRoutes.js";
-import visitorRoutes from "./routes/visitorRoutes.js";
 import facePhotoRoutes from "./routes/facePhotoRoutes.js";
 
 dotenv.config();
@@ -32,12 +26,6 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/checkin", checkinRoutes);
-app.use("/api/users", userRoutes);
-app.use("/api/visitors", visitorRoutes);
-app.use("/api/appointments", appointmentRoutes);
-app.use("/api/notifications", notificationRoutes);
-app.use("/api/statistics", statisticsRoutes);
-app.use("/api/host", hostRoutes);
 app.use("/api", facePhotoRoutes);
 
 // MongoDB connection

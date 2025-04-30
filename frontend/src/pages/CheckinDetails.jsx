@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Table, Button, Form, Container, Spinner } from "react-bootstrap";
+import { Table, Button, Form, Container, Spinner, InputGroup, FormControl } from "react-bootstrap";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { FaSearch } from "react-icons/fa"; // New import for search icon
-import { InputGroup, FormControl } from "react-bootstrap"; // If not already imported
-
+import { FaSearch } from "react-icons/fa";
 
 const CheckinDetails = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -61,29 +59,30 @@ const CheckinDetails = () => {
     };
 
     const handleGenerateBadge = (checkInId) => {
-        // Navigate to badge generation or trigger logic
         navigate(`/generate-badge/${checkInId}`);
     };
 
     const styles = {
-        container: {
-            marginTop: "30px",
-        },
+        container: { marginTop: "30px" },
         title: {
             textAlign: "center",
             fontSize: "2rem",
             color: "#333",
             marginBottom: "20px",
         },
-        searchForm: {
+        searchForm: { marginBottom: "20px" },
+        searchInputGroup: {
+            width: "100%",
             marginBottom: "20px",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+            borderRadius: "6px",
+            overflow: "hidden",
         },
         searchInput: {
             fontSize: "1rem",
             padding: "10px",
-            width: "100%",
-            borderRadius: "5px",
             border: "1px solid #ccc",
+            borderLeft: "none",
         },
         table: {
             marginTop: "20px",
@@ -94,9 +93,7 @@ const CheckinDetails = () => {
             textAlign: "center",
             fontSize: "1rem",
         },
-        tableRow: {
-            textAlign: "center",
-        },
+        tableRow: { textAlign: "center" },
         actionButton: {
             marginRight: "8px",
             padding: "6px 12px",
@@ -116,11 +113,6 @@ const CheckinDetails = () => {
             backgroundColor: "#0d6efd",
             color: "#fff",
         },
-        searchInputGroup: {
-            width: "100%",
-            marginBottom: "20px",
-        },
-
     };
 
     return (
@@ -128,9 +120,7 @@ const CheckinDetails = () => {
             <h2 style={styles.title}>My Visit Logs</h2>
             <Form style={styles.searchForm}>
                 <InputGroup style={styles.searchInputGroup}>
-                    <InputGroup.Text>
-                        <FaSearch />
-                    </InputGroup.Text>
+                    <InputGroup.Text><FaSearch /></InputGroup.Text>
                     <FormControl
                         type="text"
                         placeholder="Search by name, email, or phone"
@@ -140,7 +130,6 @@ const CheckinDetails = () => {
                     />
                 </InputGroup>
             </Form>
-
 
             {loading ? (
                 <div className="d-flex justify-content-center">
@@ -154,7 +143,6 @@ const CheckinDetails = () => {
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Check-In Time</th>
-                            <th>Responsible Person</th>
                             <th>Visit Purpose</th>
                             <th>Actions</th>
                         </tr>
@@ -162,11 +150,10 @@ const CheckinDetails = () => {
                     <tbody>
                         {filteredCheckins.map((checkin) => (
                             <tr key={checkin._id} style={styles.tableRow}>
-                                <td>{checkin.visitorName}</td> {/* Updated field */}
+                                <td>{checkin.visitorName}</td>
                                 <td>{checkin.email}</td>
-                                <td>{checkin.contactNumber}</td> {/* Updated field */}
+                                <td>{checkin.contactNumber}</td>
                                 <td>{new Date(checkin.checkInTime).toLocaleString()}</td>
-                                <td>{checkin.personToVisit}</td> {/* Updated field */}
                                 <td>{checkin.visitPurpose}</td>
                                 <td>
                                     <Button

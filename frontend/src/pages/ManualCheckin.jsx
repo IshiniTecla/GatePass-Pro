@@ -113,7 +113,8 @@ const ManualCheckIn = () => {
                         <Form.Control
                             type="text"
                             value={fullName}
-                            readOnly // ✅ makes the field uneditable
+                            onChange={(e) => setFullName(e.target.value)}
+                            required
                             style={styles.formControl}
                         />
                     </Form.Group>
@@ -123,10 +124,12 @@ const ManualCheckIn = () => {
                         <Form.Control
                             type="email"
                             value={email}
-                            readOnly // ✅ makes the field uneditable
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
                             style={styles.formControl}
                         />
                     </Form.Group>
+
 
                     <Form.Group controlId="phone" style={styles.formGroup}>
                         <Form.Label>Contact Number</Form.Label>

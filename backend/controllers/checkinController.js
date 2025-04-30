@@ -206,23 +206,9 @@ const getSingleCheckin = async (req, res) => {
 // Controller for updating check-in details (visitor)
 const updateCheckin = async (req, res) => {
   try {
-    const {
-      fullName,
-      email,
-      phone,
-      visitPurpose,
-      responsiblePerson,
-      checkInTime,
-    } = req.body;
+    const { fullName, email, phone, visitPurpose, checkInTime } = req.body;
 
-    if (
-      !fullName ||
-      !email ||
-      !phone ||
-      !visitPurpose ||
-      !responsiblePerson ||
-      !checkInTime
-    ) {
+    if (!fullName || !email || !phone || !visitPurpose || !checkInTime) {
       return res.status(400).json({ message: "All fields are required." });
     }
 
@@ -231,13 +217,11 @@ const updateCheckin = async (req, res) => {
       return res.status(404).json({ message: "Visitor not found" });
     }
 
-    // Update visitor details
-    visitor.visitorName = fullName;
+    visitor.visitorName = visitorName;
     visitor.email = email;
-    visitor.contactNumber = phone;
+    visitor.contactNumber = contactNumber;
     visitor.visitPurpose = visitPurpose;
-    visitor.responsiblePerson = responsiblePerson;
-    visitor.checkInTime = new Date(checkInTime);
+    visitor.checkInTime = new Date(checkInTime); // optional, only if passed from frontend
 
     await visitor.save();
 

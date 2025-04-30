@@ -1,5 +1,4 @@
 import FacePhoto from "../models/FacePhoto.js";
-import Visitor from "../models/Visitor.js";
 
 export const saveFacePhoto = async (req, res) => {
   try {
