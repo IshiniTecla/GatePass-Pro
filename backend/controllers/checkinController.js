@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 import crypto from "crypto";
 import dotenv from "dotenv";
 import fs from "fs";
-import faceApi from "face-api.js"; // Or another face recognition library
+import { exec } from "child_process"; // For Python face recognition integration (optional)
 
 dotenv.config(); // Load environment variables
 
@@ -118,6 +118,7 @@ const manualCheckin = async (req, res) => {
       checkInTime: new Date(checkInTime),
       isVerified: false, // Manual check-ins are not verified by default
       otp: null, // No OTP needed for manual check-in
+      method: "manual", // Manual check-in method
     });
 
     await newVisitor.save();
@@ -137,7 +138,7 @@ const handleFaceCheckIn = async (req, res) => {
   try {
     const photoPath = req.file.path;
 
-    // Use face-api.js or another library to detect the face
+    // Use face recognition (mocked here for now)
     const faceDetected = await detectFace(photoPath);
 
     if (faceDetected) {
@@ -145,7 +146,7 @@ const handleFaceCheckIn = async (req, res) => {
       const newCheckin = new Checkin({
         visitorName: req.body.visitorName,
         checkInTime,
-        method: "face", // method to distinguish face or OTP check-ins
+        method: "face", // Face check-in method
       });
 
       await newCheckin.save();
@@ -160,16 +161,17 @@ const handleFaceCheckIn = async (req, res) => {
     console.error("Error during face check-in:", error);
     res.status(500).json({ message: "Internal server error" });
   } finally {
-    if (req.file) fs.unlinkSync(req.file.path);
+    if (req.file) fs.unlinkSync(req.file.path); // Clean up uploaded file
   }
 };
 
-// Function for detecting face
+// Function for detecting face (mocked for development)
 const detectFace = async (photoPath) => {
   try {
-    // Implement the actual face recognition logic here
-    const detections = await faceApi.detectSingleFace(photoPath);
-    return detections ? true : false;
+    // Replace this with actual face recognition logic
+    // Example: Use a Python API for face detection or a Node.js-compatible library
+    // Mock logic for testing
+    return true; // Return true for development/testing
   } catch (error) {
     console.error("Error during face detection:", error);
     return false;
@@ -230,9 +232,9 @@ const updateCheckin = async (req, res) => {
     }
 
     // Update visitor details
-    visitor.fullName = fullName;
+    visitor.visitorName = fullName;
     visitor.email = email;
-    visitor.phone = phone;
+    visitor.contactNumber = phone;
     visitor.visitPurpose = visitPurpose;
     visitor.responsiblePerson = responsiblePerson;
     visitor.checkInTime = new Date(checkInTime);
@@ -296,7 +298,7 @@ export {
   handleFaceCheckIn,
   getAllCheckins,
   getSingleCheckin,
-  getCheckinsByUserId, // <-- Add this line
+  getCheckinsByUserId,
   updateCheckin,
   deleteCheckin,
 };

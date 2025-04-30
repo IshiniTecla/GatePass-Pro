@@ -3,6 +3,9 @@ import axios from "axios";
 import { Table, Button, Form, Container, Spinner } from "react-bootstrap";
 import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
+import { FaSearch } from "react-icons/fa"; // New import for search icon
+import { InputGroup, FormControl } from "react-bootstrap"; // If not already imported
+
 
 const CheckinDetails = () => {
     const { enqueueSnackbar } = useSnackbar();
@@ -32,11 +35,12 @@ const CheckinDetails = () => {
     }, []);
 
     const handleSearchChange = (e) => {
-        setSearch(e.target.value);
+        const value = e.target.value.toLowerCase();
+        setSearch(value);
         const filtered = checkins.filter((checkin) =>
-            checkin.fullName.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            checkin.email.toLowerCase().includes(e.target.value.toLowerCase()) ||
-            checkin.phone.includes(e.target.value)
+            checkin.visitorName.toLowerCase().includes(value) ||
+            checkin.email.toLowerCase().includes(value) ||
+            checkin.contactNumber.includes(value)
         );
         setFilteredCheckins(filtered);
     };
@@ -112,23 +116,31 @@ const CheckinDetails = () => {
             backgroundColor: "#0d6efd",
             color: "#fff",
         },
+        searchInputGroup: {
+            width: "100%",
+            marginBottom: "20px",
+        },
+
     };
 
     return (
         <Container style={styles.container}>
-            <h2 style={styles.title}>All Check-in Details</h2>
+            <h2 style={styles.title}>My Visit Logs</h2>
             <Form style={styles.searchForm}>
-                <Form.Group controlId="search">
-                    <Form.Label>Search Check-ins</Form.Label>
-                    <Form.Control
+                <InputGroup style={styles.searchInputGroup}>
+                    <InputGroup.Text>
+                        <FaSearch />
+                    </InputGroup.Text>
+                    <FormControl
                         type="text"
                         placeholder="Search by name, email, or phone"
                         value={search}
                         onChange={handleSearchChange}
                         style={styles.searchInput}
                     />
-                </Form.Group>
+                </InputGroup>
             </Form>
+
 
             {loading ? (
                 <div className="d-flex justify-content-center">
@@ -150,11 +162,11 @@ const CheckinDetails = () => {
                     <tbody>
                         {filteredCheckins.map((checkin) => (
                             <tr key={checkin._id} style={styles.tableRow}>
-                                <td>{checkin.fullName}</td>
+                                <td>{checkin.visitorName}</td> {/* Updated field */}
                                 <td>{checkin.email}</td>
-                                <td>{checkin.phone}</td>
+                                <td>{checkin.contactNumber}</td> {/* Updated field */}
                                 <td>{new Date(checkin.checkInTime).toLocaleString()}</td>
-                                <td>{checkin.responsiblePerson}</td>
+                                <td>{checkin.personToVisit}</td> {/* Updated field */}
                                 <td>{checkin.visitPurpose}</td>
                                 <td>
                                     <Button
