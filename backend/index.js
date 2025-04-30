@@ -8,6 +8,7 @@ import path from "path";
 import { Server } from "socket.io";
 import morgan from "morgan";
 import { fileURLToPath } from 'url';
+import mongoose from "mongoose";
 
 // Get __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
@@ -54,6 +55,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+
 // Socket.io setup
 io.on("connection", (socket) => {
   console.log("New client connected:", socket.id);
@@ -82,6 +84,11 @@ io.on("connection", (socket) => {
       io.to(`meeting-${data.meetingId}`).emit("newMessage", data);
     }
   });
+
+const PORT = process.env.PORT || 5000;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+const MONGO_URL = process.env.MONGO_URL;
+
 
   socket.on("disconnect", () => {
     console.log("Client disconnected:", socket.id);
@@ -116,6 +123,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Server error", error: err.message });
 });
 
+
 // Attach socket.io to app
 app.set("io", io);
 
@@ -133,3 +141,9 @@ process.on("unhandledRejection", (err) => {
 });
 
 export { app, server, io };
+
+// Connect to MongoDB
+mongoose
+  .connect(MONGO_URL, {})
+  .then(() => console.log("MongoDB connected"))
+  .catch((error) => console.error("MongoDB connection failed:", error));
